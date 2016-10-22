@@ -109,6 +109,7 @@ function musicRoute(req, res) {
         music_dir: config.music_dir,
         music_dir_set: config.music_dir_set,
         country_code: config.country_code,
+        player_theme: config.player_theme,
         ip: ip + ':' + app.get('port'),
         remote_name: req.params.name,
         demo: config.demo,

@@ -1,7 +1,8 @@
 var save_func = function() {
   music_dir = $('#music_dir_val').val();
   country_code = $('#country_code').val();
-  socket.emit('update_settings', {music_dir: music_dir, country_code: country_code});
+  player_theme = $('#player_theme').val();
+  socket.emit('update_settings', {music_dir: music_dir, country_code: country_code, player_theme: player_theme});
 };
 
 var showSettings = function(message) {
