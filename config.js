@@ -13,7 +13,7 @@ function Config(app) {
   this.demo = Boolean(process.env.DEMO || false);
   this.initialized = false;
   this.music_dir = '';
-  this.player_theme = '';
+  this.player_theme = 'a';
   this.music_dir_set = false;
   this.soundcloud = {
     dl_dir: 'soundcloud',
