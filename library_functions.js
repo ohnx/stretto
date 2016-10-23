@@ -39,7 +39,7 @@ var app = null;
 var cnt = 0;
 var song_list = [];
 
-var song_extentions = ['mp3', 'm4a', 'aac', 'ogg', 'wav', 'flac', 'raw'];
+var song_extensions = ['mp3', 'm4a', 'aac', 'ogg', 'wav', 'flac', 'raw'];
 
 function findNextSong() {
   if (cnt < song_list.length && running) {
@@ -92,7 +92,7 @@ function findSong(relative_location, callback) {
 
           // if it was a metadata error and the file appears to be audio, add it
           if (err.toString().indexOf('Could not find metadata header') > 0 &&
-              util.contains(song_extentions, ext)) {
+              util.contains(song_extensions, ext)) {
             console.log('Could not find metadata. Adding the song by filename.');
 
             // create a song with the filename as the title
@@ -345,6 +345,10 @@ exports.scanLibrary = function(hard) {
   });
 
   running = true;
+};
+
+exports.isValidSong = function(filename) {
+    return song_extensions.indexOf(filename.split('.').pop()) >= 0;
 };
 
 // add a song_id to a certain playlist

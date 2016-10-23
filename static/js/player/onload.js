@@ -131,6 +131,52 @@ $(document).ready(function() {
       },
     });
   });
+  
+   $('#pc_upload').click(function() {
+    bootbox.dialog({
+      message: render('#upload_template', {}),
+      title: 'Upload from Computer',
+      buttons: {
+        danger: {
+          label: 'Cancel',
+          className: 'btn-danger',
+        },
+        success: {
+          label: 'Upload!',
+          className: 'btn-success',
+          callback: function() {
+            var formData = new FormData();
+            var numSongs = document.getElementById("upload_new_file").files.length;
+            for (var i = 0; i < numSongs; i++) {
+                formData.set('song'+i, document.getElementById("upload_new_file").files[i]);
+            }
+            Messenger().post('Beginning upload of ' + numSongs + ' song(s)...');
+            $.ajax({
+              url: 'upload',  //Server script to process data
+              type: 'POST',
+              xhr: function() {  // Custom XMLHttpRequest
+                var myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload){ // Check if upload property exists
+                    //myXhr.upload.addEventListener('progress',progressHandlingFunction, false); // For handling the progress of the upload
+                }
+                return myXhr;
+              },
+              //Ajax events
+              //beforeSend: beforeSendHandler,
+              success: function() {Messenger().post(numSongs + ' song(s) uploaded!');},
+              error: function() {Messenger().post('Failed to upload songs.');},
+              // Form data
+              data: formData,
+              //Options to tell jQuery not to process data or worry about content-type.
+              cache: false,
+              contentType: false,
+              processData: false
+            });
+          },
+        },
+      },
+    });
+  });
 
   $('#open_settings').click(function() {
     showSettings();

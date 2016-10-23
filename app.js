@@ -14,6 +14,7 @@ var util = require(__dirname + '/util.js');
 var mkdirp = require('mkdirp');
 var proxy = require('express-http-proxy');
 var basicAuth = require('basic-auth-connect');
+var busboy = require('connect-busboy');
 
 var app = express().http().io();
 
@@ -70,6 +71,7 @@ async.series([function createDatabaseDirectory(next) {
   app.use(favicon(__dirname + '/static/images/favicon.ico'));
   app.use(bodyParser.urlencoded({extended: false}));
   app.use(bodyParser.json());
+  app.use(busboy());
   app.use(cookieParser());
   app.use(express.session(sessionOpts));
   app.use('/static', express.static(__dirname + '/static'));

@@ -4,16 +4,21 @@
 
 {% block extra_nav %}
 <li class='dropdown'>
-  <a class='pointer dropdown-toggle' data-toggle='dropdown'>Fetch New Music <span class="caret"></span></a>
+  <a class='pointer dropdown-toggle' data-toggle='dropdown'>Get More Music <span class="caret"></span></a>
   <ul class='dropdown-menu' role='menu'>
     <li {% if demo %}class="disabled"{% endif %}>
       <a class='pointer' id='soundcloud_fetch'>
-        From SoundCloud {% if demo %}(disabled in demo){% endif %}
+        Fetch SoundCloud {% if demo %}(disabled in demo){% endif %}
       </a>
     </li>
     <li {% if demo %}class="disabled"{% endif %}>
       <a class='pointer' id='youtube_fetch'>
-        From Youtube {% if demo %}(disabled in demo){% endif %}
+        Fetch Youtube {% if demo %}(disabled in demo){% endif %}
+      </a>
+    </li>
+    <li {% if demo %}class="disabled"{% endif %}>
+      <a class='pointer' id='pc_upload'>
+        Upload from Computer {% if demo %}(disabled in demo){% endif %}
       </a>
     </li>
   </ul>
@@ -241,6 +246,17 @@
       </div>
     </div>
   </div>
+</script>
+<script type="text/swig" id="upload_template">
+  <p>You can upload music files directly from your computer.</p>
+  <form class='form-horizontal' method='post' enctype='multipart/form-data' id='uploadform' action='upload'>
+    <div class="form-group">
+      <label for="upload_new_file" class='col-sm-3'>Files to upload:</label>
+      <div class='col-sm-9'>
+        <input class="form-control" type="file" name="upload_new_file" id="upload_new_file" multiple>
+      </div>
+    </div>
+  </form>
 </script>
 <!-- settings view templates -->
 <script type="text/swig" id="settings_template">

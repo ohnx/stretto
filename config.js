@@ -35,7 +35,7 @@ function Config(app) {
   // used for itunes metadata fetching (to select the store to search)
   this.country_code = 'us';
   
-  this.site_name = 'Stretto';
+  this.site_name = 'Mason\'s 🔥 Mixtape';
 
   // work out a default for the music directory
   // based on iTunes defaults https://support.apple.com/en-au/HT1391

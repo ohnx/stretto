@@ -5,6 +5,7 @@ var archiver = require('archiver');
 var os = require('os');
 var opener = require('opener');
 var md5 = require('md5');
+var mkdirp = require('mkdirp');
 var request = require('request').defaults({ encoding: null });
 var fs = require('fs');
 var path = require('path');
@@ -28,6 +29,7 @@ exports.createRoutes = function(app_ref) {
   app.get('/songs/:id', sendSong);
   app.get('/cover/:id', sendCover);
   app.get('/downloadplaylist/:id', downloadPlaylist);
+  app.post('/upload', uploadSong);
 
   // remote control commands
   app.get('/command/:name/:command', remoteCommand);
@@ -173,6 +175,32 @@ function downloadPlaylist(req, res) {
       // trigger the piping of the archive
       archive.finalize();
     });
+  });
+}
+
+function uploadSong(req, res) {
+  var fstream;
+  var uploadedFiles = [];
+  req.pipe(req.busboy);
+  console.log('uploading files');
+  req.busboy.on('file', function (fieldname, file, filename) {
+    if (!lib_func.isValidSong(filename)) { console.log('invalid file ' + filename); return;}
+    console.log("Uploading: " + filename);
+    var odir = path.join(app.get('config').music_dir, 'upload');
+    mkdirp(odir, function (err) {
+      uploadedFiles.push(path.join('/upload', filename));
+      fstream = fs.createWriteStream(path.join(odir, filename));
+      file.pipe(fstream);
+      fstream.on('close', function () {
+        
+      });
+    });
+  });
+  req.busboy.on('finish', function() {
+    console.log('Done uploading!');
+    res.send('ok');
+    res.end();
+    lib_func.scanItems(uploadedFiles);
   });
 }
 
