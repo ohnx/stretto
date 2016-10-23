@@ -181,7 +181,6 @@ function downloadPlaylist(req, res) {
 
 function uploadSong(req, res) {
   if (config.demo) return;
-  if ()
   var fstream;
   var uploadedFiles = [];
   req.pipe(req.busboy);
