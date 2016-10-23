@@ -106,6 +106,7 @@ function musicRoute(req, res) {
       // render the view
       res.render((md.mobile() ? 'mobile' : 'index'), {
         menu: !md.mobile(),
+        sitename: config.site_name,
         music_dir: config.music_dir,
         music_dir_set: config.music_dir_set,
         country_code: config.country_code,
@@ -415,6 +416,14 @@ function updateSongInfo(req) {
       process_cover(image.type, image.data);
     }
   }
+  
+  // save the ID3 tags
+  app.db.songs.findOne({_id: req.data._id}, function(err, song) {
+    if (err || !song) {
+    } else {
+        lib_func.saveID3(song);
+    }
+  });
 }
 
 // write the tags (metadata) from the database to the files for the given items
