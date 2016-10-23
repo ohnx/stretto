@@ -16,11 +16,13 @@
         Fetch Youtube {% if demo %}(disabled in demo){% endif %}
       </a>
     </li>
+    {% if !is_electron %}
     <li {% if demo %}class="disabled"{% endif %}>
       <a class='pointer' id='pc_upload'>
         Upload from Computer {% if demo %}(disabled in demo){% endif %}
       </a>
     </li>
+    {% endif %}
   </ul>
 </li>
 {% if !demo %}

@@ -108,7 +108,7 @@ function musicRoute(req, res) {
       // render the view
       res.render((md.mobile() ? 'mobile' : 'index'), {
         menu: !md.mobile(),
-        sitename: config.site_name,
+        app_name: config.app_name,
         music_dir: config.music_dir,
         music_dir_set: config.music_dir_set,
         country_code: config.country_code,
@@ -117,6 +117,7 @@ function musicRoute(req, res) {
         ip: ip + ':' + app.get('port'),
         remote_name: req.params.name,
         demo: config.demo,
+        is_electron: config.is_electron,
       });
     };
 
@@ -179,6 +180,8 @@ function downloadPlaylist(req, res) {
 }
 
 function uploadSong(req, res) {
+  if (config.demo) return;
+  if ()
   var fstream;
   var uploadedFiles = [];
   req.pipe(req.busboy);
