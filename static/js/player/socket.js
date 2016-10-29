@@ -252,6 +252,18 @@ socket.on('command', function(data) {
     case 'playpause':
       player.togglePlayState();
       break;
+    case 'volup':
+      var newVol = player.vol.slider('getValue')+5;
+      newVol = newVol>100?100:newVol;
+      player.vol.slider('setValue', newVol);
+      player.setVolume(newVol);
+      break;
+    case 'voldown':
+      var newVol = player.vol.slider('getValue')-5;
+      newVol = newVol>100?100:newVol;
+      player.vol.slider('setValue', newVol);
+      player.setVolume(newVol);
+      break;
     default:
       break;
   }

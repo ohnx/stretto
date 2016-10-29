@@ -180,7 +180,7 @@ function downloadPlaylist(req, res) {
 }
 
 function uploadSong(req, res) {
-  if (config.demo) return;
+  if (app.get('config').demo) return;
   var fstream;
   var uploadedFiles = [];
   req.pipe(req.busboy);

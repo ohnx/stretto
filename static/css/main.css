@@ -367,3 +367,72 @@ tr:hover .options{
 .pointer{
   cursor: pointer;
 }
+
+
+
+
+
+
+
+
+
+.navbar {
+    background: orange;
+    border-bottom: 1px solid orange;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+    background-color: darkorange;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: darkorange;
+}
+
+a, .blue {
+    color: orange;
+}
+
+a:hover, a:focus {
+    color: darkorange;
+}
+
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    background-color: darkorange;
+}
+
+
+.slider-selection {
+    background: orange;
+}
+
+.slider.slider-horizontal .slider-handle {
+    background-color: darkorange;
+}
+
+#bottom_bar:hover .current_time, #bottom_bar:hover .duration {
+    background-color: darkorange;
+}
+
+.selected, .light-blue {
+    background-color: orange;
+}
+
+.selected:hover, .light-blue:hover {
+    background-color: darkorange;
+    color: #fff;
+}
+
+#repeat_badge {
+    background-color: orange;
+}
+
+.btn-primary {
+    background: darkorange;
+    border: 1px solid orange;
+}
+
+.btn-primary:hover {
+    background: orange;
+    border: 1px solid darkorange;
+}
