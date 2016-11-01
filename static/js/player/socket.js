@@ -260,7 +260,7 @@ socket.on('command', function(data) {
       break;
     case 'voldown':
       var newVol = player.vol.slider('getValue')-5;
-      newVol = newVol>100?100:newVol;
+      newVol = newVol<0?0:newVol;
       player.vol.slider('setValue', newVol);
       player.setVolume(newVol);
       break;
