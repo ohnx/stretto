@@ -666,7 +666,7 @@ function PlayState() {
 
         // load in the new audio track
         this.audio_elem.pause();
-        this.srcElem.attr('src', 'songs/' + songInfo.attributes._id);
+        this.srcElem.attr('src', 'songs/' + songInfo.attributes._id + '.mid');
         this.audio_elem.load();
         this.audio_elem.play();
 

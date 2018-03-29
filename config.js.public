@@ -27,16 +27,16 @@ function Config(app) {
     parallel_download: 5,
   };
 
-  // // Uncomment this block to set your own basic http authentication
+  // Uncomment this block to set your own basic http authentication
   // this.auth = {
-  //   username: 'username',
-  //   password: 'password',
+  //    username: 'username',
+  //    password: 'password',
   // };
 
   // used for itunes metadata fetching (to select the store to search)
   this.country_code = 'us';
   
-  this.app_name = 'Mason\'s 🔥 Mixtape';
+  this.app_name = 'Stretto';
 
   // work out a default for the music directory
   // based on iTunes defaults https://support.apple.com/en-au/HT1391

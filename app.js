@@ -15,6 +15,7 @@ var mkdirp = require('mkdirp');
 var proxy = require('express-http-proxy');
 var basicAuth = require('basic-auth-connect');
 var busboy = require('connect-busboy');
+var cors = require('cors');
 
 var app = express().http().io();
 
@@ -87,6 +88,9 @@ async.series([function createDatabaseDirectory(next) {
   if (app.get('env') == 'development') {
     app.use(errorhandler());
   }
+
+  // CORS
+  app.use(cors())
 
   require(__dirname + '/routes').createRoutes(app);
 
