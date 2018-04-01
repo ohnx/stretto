@@ -1,8 +1,11 @@
 var save_func = function() {
   music_dir = $('#music_dir_val').val();
   country_code = $('#country_code').val();
+  var player_theme_old = player_theme;
   player_theme = $('#player_theme').val();
-  socket.emit('update_settings', {music_dir: music_dir, country_code: country_code, player_theme: player_theme});
+  localStorage.setItem('theme', player_theme);
+  socket.emit('update_settings', {music_dir: music_dir, country_code: country_code});
+  if (player_theme != player_theme_old) setTimeout(function(){location.reload()}, 100);
 };
 
 var showSettings = function(message) {

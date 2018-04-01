@@ -14,7 +14,7 @@ function Config(app) {
   this.is_electron = Boolean(process.env.ELECTRON_ENABLED || false);
   this.initialized = false;
   this.music_dir = '';
-  this.player_theme = 'a';
+  this.player_themes = ['default','orange'];
   this.music_dir_set = false;
   this.soundcloud = {
     dl_dir: 'soundcloud',

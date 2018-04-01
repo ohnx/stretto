@@ -285,9 +285,9 @@
   <div class="form-group">
     <label for="player_theme" class="col-sm-2 control-label">Theme</label>
     <div class="col-sm-10">
-<select id="player_theme">
-{% for theme in themes %}
-  <option value="{{ theme }}" {% if theme == player_theme %}selected{% endif %}>{{ theme }}</option>
+<select class="form-control" id="player_theme">
+{% for theme in player_themes %}
+  {% if theme != "null" %}<option value="{{ theme }}" {% if theme == player_theme %}selected{% endif %}>{{ theme }}</option>{% endif %}
 {% endfor %}
 </select>
     </div>
@@ -336,7 +336,13 @@
 var this_ip = "{{ip}}";
 var country_code = "{{country_code}}";
 var on_mobile = false;
+var player_themes = [{% for theme in player_themes %}"{{theme}}",{% endfor %}"null"];
+var player_theme = localStorage.getItem('theme') ? localStorage.getItem('theme') : "{{default_theme}}";
+if (player_themes.indexOf(player_theme) < 0) {
+  player_theme = "{{default_theme}}";
+}
 </script>
 {% endblock %}
 {% block scripts %}
+    "static/css/themes/" + player_theme + ".css",
 {% endblock %}

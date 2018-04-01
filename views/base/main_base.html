@@ -11,8 +11,7 @@
   <script type="text/javascript">
   head.load(
     "static/lib/font-awesome-bower/css/font-awesome.css",
-    "static/lib/libs.min.css",
-    "static/css/main.css"
+    "static/lib/libs.min.css"
     );
   var music_dir = "{{music_dir|addslashes}}";
   var music_dir_set = "{{music_dir_set}}" === "true";
@@ -75,10 +74,10 @@
       "static/js/player/syncview.js",
       "static/js/player/footer.js",
       "static/js/player/coverbox.js",
+  {% block scripts %}
+  {% endblock %}
       "https://www.youtube.com/iframe_api"
       );
   </script>
-  {% block scripts %}
-  {% endblock %}
 </body>
 </html>
