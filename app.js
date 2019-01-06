@@ -13,7 +13,7 @@ var path = require('path');
 var util = require(__dirname + '/util.js');
 var mkdirp = require('mkdirp');
 var proxy = require('express-http-proxy');
-var basicAuth = require('basic-auth-connect');
+var basicAuth = require('basic-auth-connect-ohnx-fork');
 var busboy = require('connect-busboy');
 var cors = require('cors');
 
@@ -90,7 +90,7 @@ async.series([function createDatabaseDirectory(next) {
   }
 
   // CORS
-  app.use(cors())
+  app.use(cors());
 
   require(__dirname + '/routes').createRoutes(app);
 

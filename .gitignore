@@ -2,5 +2,4 @@ node_modules/*
 bower_components/*
 static/lib/*
 dbs/*
-bck.zip
 config.js
