@@ -15,7 +15,9 @@
     "async": "*",
     "basic-auth-connect-ohnx-fork": "^1.0.0",
     "body-parser": "^1.14.1",
+    "connect-busboy": "*",
     "cookie-parser": "^1.4.0",
+    "cors": "^2.8.5",
     "errorhandler": "^1.4.2",
     "express-http-proxy": "^0.3.0",
     "express.oi": "0.0.19",
@@ -32,8 +34,7 @@
     "soundcloud-resolver": "*",
     "swig": "*",
     "youtube-playlist-info": "^0.1.0",
-    "ytdl-core": "*",
-    "connect-busboy": "*"
+    "ytdl-core": "*"
   },
   "optionalDependencies": {
     "ffmetadata-ohnx-fork": "*",
