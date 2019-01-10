@@ -28,6 +28,7 @@ exports.createRoutes = function(app_ref) {
   app.get('/', musicRoute);
   app.get('/remote/:name', musicRoute);
   app.get('/songs/:id.mid', sendSong);
+  app.get('/songs', function(req, res){get_songs(function(songs){res.json(songs);res.end();});});
   app.get('/cover/:id', sendCover);
   app.get('/downloadplaylist/:id', downloadPlaylist);
   app.post('/upload', uploadSong);
