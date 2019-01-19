@@ -7,13 +7,8 @@
   <a class='pointer dropdown-toggle' data-toggle='dropdown'>Get More Music <span class="caret"></span></a>
   <ul class='dropdown-menu' role='menu'>
     <li {% if demo %}class="disabled"{% endif %}>
-      <a class='pointer' id='soundcloud_fetch'>
-        Fetch SoundCloud {% if demo %}(disabled in demo){% endif %}
-      </a>
-    </li>
-    <li {% if demo %}class="disabled"{% endif %}>
-      <a class='pointer' id='youtube_fetch'>
-        Fetch Youtube {% if demo %}(disabled in demo){% endif %}
+      <a class='pointer' id='url_fetch'>
+        Fetch URL {% if demo %}(disabled in demo){% endif %}
       </a>
     </li>
     {% if !is_electron %}

@@ -110,20 +110,9 @@ $(document).ready(function() {
   $('#content').scroll(hideOptions);
 
   // add click handler on menu items
-  $('#soundcloud_fetch').click(function() {
+  $('#url_fetch').click(function() {
     bootbox.prompt({
-      title: 'Enter the SoundCloud URL',
-      callback: function(result) {
-        if (result !== null) {
-          socket.emit('soundcloud_download', {url: result});
-        }
-      },
-    });
-  });
-
-  $('#youtube_fetch').click(function() {
-    bootbox.prompt({
-      title: 'Enter the Youtube URL (also works for playlist downloads)',
+      title: 'Enter a Soundcloud or Youtube URL (also works for playlist downloads)',
       callback: function(result) {
         if (result !== null) {
           socket.emit('youtube_download', {url: result});

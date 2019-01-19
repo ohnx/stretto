@@ -57,10 +57,7 @@ exports.createRoutes = function(app_ref) {
     app.io.route('sync_page_connected', syncPageConnected);
     app.io.route('sync_playlists', syncPlaylists);
 
-    // soundcloud downloading
-    app.io.route('soundcloud_download', soundcloudDownload);
-
-    // youtube downloading
+    // soundcloud/youtube downloading
     app.io.route('youtube_download', youtubeDownload);
 
     // youtube downloading for bunch of songs with pre-filled info
@@ -575,14 +572,13 @@ function syncPlaylists(req) {
   lib_func.sync_import(songs, remote_url);
 }
 
-// download the soundcloud songs from the requested url
-function soundcloudDownload(req) {
-  lib_func.scDownload(req.data.url);
-}
-
-// download the youtube song
+// download the soundcloud/youtube song
 function youtubeDownload(req) {
-  lib_func.ytDownload({url: req.data.url});
+  if (req.data.url.match(/soundcloud\.com/g)) {
+    lib_func.scDownload(req.data.url);
+  } else {
+    lib_func.ytDownload({url: req.data.url});
+  }
 }
 
 function youtubeImport(req) {
