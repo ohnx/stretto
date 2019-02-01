@@ -2,12 +2,10 @@ Stretto (previously Node Music Player)
 =================
 #### An open source web-based music player
 
-[![Join the chat at https://gitter.im/benkaiser/stretto](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/benkaiser/stretto?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 ![screenshot](https://cloud.githubusercontent.com/assets/608054/12073955/0b9a34c6-b0ef-11e5-83f5-04c6f3fed33c.png)
 
 ### Live Demo
-You can view a version I have hosted on my personal server at [http://music.kaiserapps.com/](http://music.kaiserapps.com/).
+You can view a version hosted [on Heroku](https://stretto-demo.herokuapp.com/).
 
 To have the full functionality and to use your own music please follow the install instructions below.
 
@@ -16,7 +14,9 @@ To purchase or download their music visit [their website](https://socialxclub.ba
 
 ### User Installation Instructions
 
-Visit the [releases page](https://github.com/benkaiser/stretto/releases) for the latest release, and select the download for your platform. Unzip the download and run either the `Stretto.exe` on Windows, `Stretto.app` on Mac or the `Stretto` executable on Linux.
+Visit the [releases page](https://github.com/benkaiser/stretto/releases) for the latest release,
+and select the download for your platform. Unzip the download and run either the `Stretto.exe`
+on Windows, `Stretto.app` on Mac or the `Stretto` executable on Linux.
 
 ### Dev Installation Instructions
 ##### Dependencies
@@ -25,7 +25,8 @@ Visit the [releases page](https://github.com/benkaiser/stretto/releases) for the
 
 If you have any issues during install, make sure you are running the latest version of Nodejs and Npm.
 
-For the Youtube download and converison, make sure you have [ffmpeg](https://ffmpeg.org/) installed on your system (including all necessary encoding libraries like libmp3lame or libx264).
+For the Youtube download and converison, **make sure you have [ffmpeg](https://ffmpeg.org/)
+installed on your system** (including all necessary encoding libraries like libmp3lame or libx264).
 Windows users can install ffmpeg from [Zeranoe](http://ffmpeg.zeranoe.com/builds/).
 
 After all the dependencies have been installed, run these commands to install the music player:
