@@ -1,4 +1,5 @@
 // these functions handle selection of songs and drawing the (right click) context menu
+/* global player, socket, $, render, MusicApp, Messenger, showInfoView, bootbox */
 
 var optionsVisible = false;
 var selectedItems = [];
@@ -34,16 +35,21 @@ function createOptions(x, y) {
     }))
     .css({top: y + 'px', left: x + 'px'});
   $('.add_to_queue').click(function(ev) {
-    for (var x = 0; x < selectedItems.length; x++) {
-      player.play_history.unshift(selectedItems[x]);
-      player.play_history_idx++;
+    if (player.shuffle_state) {
+      for (var x = 0; x < selectedItems.length; x++) {
+        player.shuffle_pool.splice(player.shuffle_idx, 0, player.song_collection.findBy_Id(selectedItems[x]));
+      }
+    } else {
+      for (var x = 0; x < selectedItems.length; x++) {
+        player.queue_pool.splice(player.current_index + 1, 0, player.song_collection.findBy_Id(selectedItems[x]));
+      }
     }
 
     hideOptions();
   });
 
   $('.add_to_playlist').click(function(ev) {
-    id = $(ev.target).closest('li').attr('id');
+    let id = $(ev.target).closest('li').attr('id');
     socket.emit('add_to_playlist', {add: selectedItems, playlist: id});
     hideOptions();
 
@@ -68,7 +74,7 @@ function createOptions(x, y) {
   });
 
   $('.remove_from_playlist').click(function(ev) {
-    id = $(ev.target).closest('li').attr('id');
+    let id = $(ev.target).closest('li').attr('id');
 
     // get a handle on the playlist
     for (var i = 0; i < selectedItems.length; i++) {
@@ -96,6 +102,28 @@ function createOptions(x, y) {
   $('.hard_rescan').click(function(ev) {
     socket.emit('hard_rescan', {items: selectedItems});
     hideOptions();
+  });
+
+  $('.delete_songs').click(function(ev) {
+    hideOptions();
+    bootbox.dialog({
+      message: 'Do you really want to delete these songs?',
+      title: 'Delete Songs',
+      buttons: {
+        cancel: {
+          label: 'Cancel',
+          className: 'btn-default',
+        },
+
+        del: {
+          label: 'Delete',
+          className: 'btn-danger',
+          callback: function() {
+            socket.emit('delete', {items: selectedItems});
+          },
+        },
+      },
+    });
   });
 
   $('.rewrite_tags').click(function(ev) {
@@ -168,12 +196,12 @@ function delFromSelection(id) {
 }
 
 function selectBetween(id, id2) {
-  loc1 = indexInSongView(id);
-  loc2 = indexInSongView(id2);
+  let loc1 = indexInSongView(id);
+  let loc2 = indexInSongView(id2);
 
   // make sure loc1 is less than loc2
   if (loc1 > loc2) {
-    temp = loc1;
+    let temp = loc1;
     loc1 = loc2;
     loc2 = temp;
   }

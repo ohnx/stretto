@@ -31,7 +31,7 @@ Windows users can install ffmpeg from [Zeranoe](http://ffmpeg.zeranoe.com/builds
 
 After all the dependencies have been installed, run these commands to install the music player:
 ```
-git clone https://github.com/benkaiser/stretto.git
+git clone https://github.com/ohnx/stretto.git
 cd stretto/
 npm install
 ```
@@ -99,7 +99,7 @@ bindsym $mod+Prior exec curl http://localhost:2000/command/my_remote_name/next
 
 ### Planned features
 
-- See the projects public [Trello board](https://trello.com/b/cXdOSOoR/stretto) for features planned / implemented. If you want to request a feature, please [create an issue](https://github.com/benkaiser/stretto/issues/new).
+- See the projects public [Trello board](https://trello.com/b/cXdOSOoR/stretto) for features planned / implemented. If you want to request a feature, please [create an issue](https://github.com/ohnx/stretto/issues/new).
 
 ### License
 

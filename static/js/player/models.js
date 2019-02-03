@@ -1,4 +1,5 @@
 // this file contains the models/collections in needed by the player
+/* global Backbone, socket, player, */
 
 var PlaylistCollection = Backbone.Collection.extend({
   comparator: function(playlist) {
@@ -65,11 +66,10 @@ var SongCollection = Backbone.Collection.extend({
 
   getByIds: function(playlist) {
     if (playlist !== undefined && playlist.songs !== undefined) {
-      if (playlist._id == 'QUEUE') {
+      if (playlist._id == 'QUEUE')
         return (player.shuffle_state) ? player.shuffle_pool : player.queue_pool;
-      }
 
-      songs = [];
+      let songs = [];
       for (var i = 0; i < playlist.songs.length; i++) {
         var song = this.findBy_Id(playlist.songs[i]._id);
         if (song) {
