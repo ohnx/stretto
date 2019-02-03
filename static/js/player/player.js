@@ -348,9 +348,17 @@ function PlayState() {
       // update the window title
       window.document.title = this.current_song.attributes.title + ' - ' + this.current_song.attributes.display_artist;
 
-      // update the cover photo if it's showing fullscreen and the new song has cover art
-      if (cover_is_visible && cover_is_current && this.current_song.attributes.cover_location) {
-        showCover('cover/' + this.current_song.attributes.cover_location);
+      if (this.current_song.attributes.cover_location) {
+        // update the window icon
+        var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.rel = 'shortcut icon';
+        link.href = this.current_song.attributes.cover_location;
+        document.getElementsByTagName('head')[0].appendChild(link);
+
+        if (cover_is_visible && cover_is_current) {
+          // update the cover photo if it's showing fullscreen and the new song has cover art
+          showCover('cover/' + this.current_song.attributes.cover_location);
+        }
       }
 
       this.displayNotification();
