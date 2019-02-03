@@ -35,10 +35,14 @@ function createOptions(x, y) {
     }))
     .css({top: y + 'px', left: x + 'px'});
   $('.add_to_queue').click(function(ev) {
-    let baseIdx = (player.shuffle_state) ? player.shuffle_idx : player.current_index;
-
-    for (var x = 0; x < selectedItems.length; x++) {
-      player.songs.splice(baseIdx, 0, this.findBy_Id(player.play_history[selectedItems[x]]));
+    if (player.shuffle_state) {
+      for (var x = 0; x < selectedItems.length; x++) {
+        player.shuffle_pool.splice(player.shuffle_idx, 0, player.song_collection.findBy_Id(selectedItems[x]));
+      }
+    } else {
+      for (var x = 0; x < selectedItems.length; x++) {
+        player.queue_pool.splice(player.current_index + 1, 0, player.song_collection.findBy_Id(selectedItems[x]));
+      }
     }
 
     hideOptions();
