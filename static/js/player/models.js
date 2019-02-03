@@ -66,22 +66,8 @@ var SongCollection = Backbone.Collection.extend({
 
   getByIds: function(playlist) {
     if (playlist !== undefined && playlist.songs !== undefined) {
-      if (playlist._id == 'QUEUE') {
-        // If current song is on infinite play, it is the only one to play
-        if (this.repeat_state == this.repeat_states.one) return [player.current_song];
-
-        // Otherwise we need to do more work
-        let songs = (player.shuffle_state) ? player.shuffle_pool : player.queue_pool;
-
-        // See if any songs were added in the "add to queue"
-        for (var i = 0; i < player.play_history_idx; i++) {
-          // Add them to the front of the queue, in order
-          console.log('Adding to queue: ', i, player.play_history[i]);
-          songs.unshift(player.play_history[i]);
-        }
-
-        return songs;
-      }
+      if (playlist._id == 'QUEUE')
+        return (player.shuffle_state) ? player.shuffle_pool : player.queue_pool;
 
       let songs = [];
       for (var i = 0; i < playlist.songs.length; i++) {

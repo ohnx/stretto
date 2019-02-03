@@ -35,9 +35,10 @@ function createOptions(x, y) {
     }))
     .css({top: y + 'px', left: x + 'px'});
   $('.add_to_queue').click(function(ev) {
+    let baseIdx = (player.shuffle_state) ? player.shuffle_idx : player.current_index;
+
     for (var x = 0; x < selectedItems.length; x++) {
-      player.play_history.unshift(selectedItems[x]);
-      player.play_history_idx++;
+      player.songs.splice(baseIdx, 0, this.findBy_Id(player.play_history[selectedItems[x]]));
     }
 
     hideOptions();
