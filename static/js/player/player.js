@@ -348,17 +348,9 @@ function PlayState() {
       // update the window title
       window.document.title = this.current_song.attributes.title + ' - ' + this.current_song.attributes.display_artist;
 
-      if (this.current_song.attributes.cover_location) {
-        // update the window icon
-        var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-        link.rel = 'shortcut icon';
-        link.href = this.current_song.attributes.cover_location;
-        document.getElementsByTagName('head')[0].appendChild(link);
-
-        if (cover_is_visible && cover_is_current) {
-          // update the cover photo if it's showing fullscreen and the new song has cover art
-          showCover('cover/' + this.current_song.attributes.cover_location);
-        }
+      if (cover_is_visible && cover_is_current && this.current_song.attributes.cover_location) {
+        // update the cover photo if it's showing fullscreen and the new song has cover art
+        showCover('cover/' + this.current_song.attributes.cover_location);
       }
 
       this.displayNotification();
@@ -609,7 +601,7 @@ function PlayState() {
   this.displayNotification = function() {
     // send a song change notification to the desktop:
     if ('Notification' in window) {
-      var showNotifiaction = function() {
+      var showNotification = function() {
         // build the notification data
         var notifTitle = 'Playing: ' + this.current_song.attributes.title;
         var notifOptions = {
@@ -635,11 +627,11 @@ function PlayState() {
 
       // check if we have permission, if not, ask for it
       if (Notification.permission === 'granted') {
-        showNotifiaction.bind(this)();
+        showNotification.bind(this)();
       } else if (Notification.permission !== 'denied') {
         Notification.requestPermission(function(permission) {
           if (permission === 'granted') {
-            showNotifiaction.bind(this)();
+            showNotification.bind(this)();
           }
         });
       }
