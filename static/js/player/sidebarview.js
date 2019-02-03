@@ -1,3 +1,5 @@
+/* global Backbone, player, bootbox, socket, Messenger, render, $, _ */
+
 SidebarView = Backbone.View.extend({
   template: '#sidebar_template',
   render: function() {
@@ -20,7 +22,7 @@ SidebarView = Backbone.View.extend({
   },
 
   searchItems: function() {
-    searchText = $('.search-input').val();
+    let searchText = $('.search-input').val();
     player.updateSearch(searchText);
     return true;
   },
@@ -60,7 +62,7 @@ SettingsBarView = Backbone.View.extend({
           label: 'Save',
           className: 'btn-success',
           callback: function() {
-            comp_name = $('#comp_name_input').val();
+            let comp_name = $('#comp_name_input').val();
             player.setCompName(comp_name);
           },
         },

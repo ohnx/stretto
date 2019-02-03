@@ -1,5 +1,5 @@
 // these functions handle selection of songs and drawing the (right click) context menu
-/* global player, socket, $, render, MusicApp, Messenger, showInfoView */
+/* global player, socket, $, render, MusicApp, Messenger, showInfoView, bootbox */
 
 var optionsVisible = false;
 var selectedItems = [];
@@ -100,8 +100,25 @@ function createOptions(x, y) {
   });
 
   $('.delete_songs').click(function(ev) {
-    socket.emit('delete', {items: selectedItems});
     hideOptions();
+    bootbox.dialog({
+      message: 'Do you really want to delete these songs?',
+      title: 'Delete Songs',
+      buttons: {
+        cancel: {
+          label: 'Cancel',
+          className: 'btn-default',
+        },
+
+        del: {
+          label: 'Delete',
+          className: 'btn-danger',
+          callback: function() {
+            socket.emit('delete', {items: selectedItems});
+          },
+        },
+      },
+    });
   });
 
   $('.rewrite_tags').click(function(ev) {

@@ -1,5 +1,6 @@
 // setup the backbone app and router
-MusicApp = new Backbone.Marionette.Application();
+/* global Backbone, player, SongView, $, SidebarView, SettingsBarView, _, on_mobile */
+let MusicApp = new Backbone.Marionette.Application();
 
 MusicApp.addRegions({
   sideBarRegion: '#sidebar',
@@ -8,9 +9,9 @@ MusicApp.addRegions({
   settingBarRegion: '#settings_bar',
 });
 
-items = ['playlists', 'songs'];
-itemsLoaded = [];
-MusicAppRouter = Backbone.Router.extend({
+let items = ['playlists', 'songs'];
+let itemsLoaded = [];
+let MusicAppRouter = Backbone.Router.extend({
   sb: null,
   songview: null,
   settingbar: null,
@@ -20,7 +21,7 @@ MusicAppRouter = Backbone.Router.extend({
     'searchyt/:search': 'searchyt',
   },
   playlist: function(id) {
-    findId = player.playlist_collection.getBy_Id(id);
+    let findId = player.playlist_collection.getBy_Id(id);
     if (findId === false) {
       findId = player.playlist_collection.getBy_Id('LIBRARY');
     }

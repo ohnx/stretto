@@ -313,10 +313,10 @@ tr:hover .options{
   color: #4BF;
 }
 .light-blue{
-  background-color: #DDEEFF;
+  background-color: orange;
 }
 .selected{
-  background-color: #DDEEFF;
+  background-color: orange;
 }
 /*** custom scrollbar ***/
 .custom_scrollbar::-webkit-scrollbar {
