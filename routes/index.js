@@ -17,7 +17,7 @@ var songSearch = require('song-search');
  * GET home page.
  */
 
-app = null;
+let app = null;
 
 exports.createRoutes = function(app_ref) {
   app = app_ref;
@@ -49,6 +49,9 @@ exports.createRoutes = function(app_ref) {
     app.io.route('start_scan_hard', function(req) { lib_func.scanLibrary(true); });
 
     app.io.route('hard_rescan', rescanItem);
+
+    // delete song
+    app.io.route('delete', deleteItems);
 
     // rewrite tags of a track to the file
     app.io.route('rewrite_tags', rewriteTags);
@@ -99,7 +102,7 @@ exports.createRoutes = function(app_ref) {
 
 function musicRoute(req, res) {
   // test if client is mobile
-  md = new MobileDetect(req.headers['user-agent']);
+  let md = new MobileDetect(req.headers['user-agent']);
 
   // get ip (for syncing functions)
   util.getip(function(ip) {
@@ -157,7 +160,6 @@ function downloadPlaylist(req, res) {
     if (err) throw err;
 
     // create zip
-    var filename = os.tmpdir() + '/download.zip';
     var archive = archiver('zip');
     async.forEach(playlist.songs, function(item, callback) {
       app.db.songs.findOne({_id: item._id}, function(err, song) {
@@ -170,6 +172,10 @@ function downloadPlaylist(req, res) {
         callback();
       });
     }, function(err) {
+      if (err) {
+        console.error(err);
+        return;
+      }
       // set the response headers and set the archiver to pipe on finish
       res.setHeader('Content-Type', 'application/zip');
       res.setHeader('Content-disposition', 'attachment; filename=download.zip');
@@ -192,6 +198,11 @@ function uploadSong(req, res) {
     console.log("Uploading: " + filename);
     var odir = path.join(app.get('config').music_dir, 'upload');
     mkdirp(odir, function (err) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
       uploadedFiles.push(path.join('/upload', filename));
       fstream = fs.createWriteStream(path.join(odir, filename));
       file.pipe(fstream);
@@ -233,7 +244,11 @@ function returnPlaylists(req) {
 
 function get_playlists(callback) {
   app.db.playlists.find({}).sort({ title: 1 }).exec(function(err, docs) {
-    playlists = docs;
+    if (err) {
+      console.error(err);
+      return;
+    }
+    let playlists = docs;
 
     // create a new playlist for the library
     getLibraryIds(function(result) {
@@ -262,6 +277,11 @@ function get_playlists(callback) {
 // get the _id's of every song in the library
 function getLibraryIds(callback) {
   app.db.songs.find({}).sort({ title: 1 }).exec(function(err, docs) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
     for (var i = 0; i < docs.length; i++) {
       docs[i] = {_id: docs[i]._id};
     }
@@ -271,12 +291,16 @@ function getLibraryIds(callback) {
 }
 
 function createPlaylist(req) {
-  plist = {
+  let plist = {
     title: req.data.title,
     songs: req.data.songs,
     editable: true,
   };
   app.db.playlists.insert(plist, function(err, doc) {
+    if (err) {
+      console.error(err);
+      return;
+    }
     req.io.route('fetch_playlists');
   });
 }
@@ -290,20 +314,30 @@ function renamePlaylist(req) {
 }
 
 function deletePlaylist(req) {
-  del = req.data.del;
+  let del = req.data.del;
   app.db.playlists.remove({_id: del}, {}, function(err, numRemoved) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
     req.io.route('fetch_playlists');
   });
 }
 
 function addToPlaylist(req) {
-  addItems = req.data.add;
-  to = req.data.playlist;
+  let addItems = req.data.add;
+  let to = req.data.playlist;
 
   // pull the playlists database
   app.db.playlists.findOne({ _id: to}, function(err, doc) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
     // used as a counter to count how many still need to be added
-    waitingOn = 0;
+    let waitingOn = 0;
 
     // prep function for use in loop
     var checkFinish = function() {
@@ -331,9 +365,14 @@ function addToPlaylist(req) {
 }
 
 function removeFromPlaylist(req) {
-  removeItems = req.data.remove;
-  to = req.data.playlist;
+  let removeItems = req.data.remove;
+  let to = req.data.playlist;
   app.db.playlists.findOne({ _id: to}, function(err, doc) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
     var tmpSongs = [];
     for (var i = 0; i < doc.songs.length; i++) {
       if (removeItems.indexOf(doc.songs[i]._id) == -1) {
@@ -352,6 +391,11 @@ function songMovedInPlaylist(req) {
   var oldIndex = req.data.oldIndex;
   var newIndex = req.data.newIndex;
   app.db.playlists.findOne({ _id: playlist_id}, function(err, playlist) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
     // remove the item from it's old place
     var item = playlist.songs.splice(oldIndex, 1)[0];
 
@@ -387,6 +431,30 @@ function rescanItem(req) {
     lib_func.scanItems(songLocArr);
   });
 }
+
+// delete song items
+function deleteItems(req) {
+  var items = req.data.items;
+  app.db.songs.find({ _id: { $in: items }}, function(err, songs) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    for (var i = 0; i < songs.length; i++) {
+      let song = songs[i].location;
+      fs.unlink(path.join(app.get('config').music_dir, song), function (err) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        // this will remove the song from the library
+        lib_func.scanItems([song]);
+      });
+    }
+  });
+}
+
 
 // update the details for a song
 function updateSongInfo(req) {
@@ -426,7 +494,17 @@ function updateSongInfo(req) {
             cover_location: cover_filename,
           },
         }, { multi: true }, function(err, numReplaced) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+
           app.db.songs.find({display_artist: req.data.artist, album: req.data.album}, function(err, tracks) {
+            if (err) {
+              console.error(err);
+              return;
+            }
+
             app.io.sockets.emit('song_update', tracks);
           });
         });
@@ -552,6 +630,11 @@ function syncPlaylists(req) {
 
   // function for within loop
   var playlistResult = function(err, numReplaced, newDoc) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
     if (newDoc) {
       console.log('Inserted playlist: ' + newDoc.title);
     } else {

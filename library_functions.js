@@ -179,10 +179,10 @@ function findSong(relative_location, callback) {
 
             // write the cover photo as an md5 string
             if (result.picture.length > 0) {
-              pic = result.picture[0];
+              let pic = result.picture[0];
               pic.format = pic.format.replace(/[^a-z0-9]/gi, '_').toLowerCase();
               song.cover_location = md5(pic.data) + '.' + pic.format;
-              filename = app.get('configDir') + '/dbs/covers/' + song.cover_location;
+              let filename = app.get('configDir') + '/dbs/covers/' + song.cover_location;
               fs.exists(filename, function(exists) {
                 if (!exists) {
                   fs.writeFile(filename, pic.data, function(err) {
@@ -430,7 +430,6 @@ exports.scDownload = function(url) {
       var out_dir = path.join(app.get('config').music_dir, app.get('config').soundcloud.dl_dir);
       mkdirp(out_dir, function() {
         // start an async loop to download the songs
-        var finished = false;
         async.until(function() { return tracks.length === 0; }, function(callback) {
           // get the current item and remove it from the stack
           var current_track = tracks.pop();
@@ -696,7 +695,7 @@ exports.ytDownload = function(data, finalCallback) {
                 song.cover_location = cover_location;
                 saveData(song);
               });
-            };
+            }
           } else {
             if (typeof error != Object) {
               error = {
@@ -838,6 +837,7 @@ function downloadCoverArt(url, callback) {
     fs.exists(filename, function(exists) {
       if (!exists) {
         fs.writeFile(filename, body, function(err) {
+          if (err) console.error(err); // TODO - handle this error
           callback(cover_location);
         });
       } else {

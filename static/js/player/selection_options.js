@@ -1,4 +1,5 @@
 // these functions handle selection of songs and drawing the (right click) context menu
+/* global player, socket, $, render, MusicApp, Messenger, showInfoView */
 
 var optionsVisible = false;
 var selectedItems = [];
@@ -43,7 +44,7 @@ function createOptions(x, y) {
   });
 
   $('.add_to_playlist').click(function(ev) {
-    id = $(ev.target).closest('li').attr('id');
+    let id = $(ev.target).closest('li').attr('id');
     socket.emit('add_to_playlist', {add: selectedItems, playlist: id});
     hideOptions();
 
@@ -68,7 +69,7 @@ function createOptions(x, y) {
   });
 
   $('.remove_from_playlist').click(function(ev) {
-    id = $(ev.target).closest('li').attr('id');
+    let id = $(ev.target).closest('li').attr('id');
 
     // get a handle on the playlist
     for (var i = 0; i < selectedItems.length; i++) {
@@ -95,6 +96,11 @@ function createOptions(x, y) {
 
   $('.hard_rescan').click(function(ev) {
     socket.emit('hard_rescan', {items: selectedItems});
+    hideOptions();
+  });
+
+  $('.delete_songs').click(function(ev) {
+    socket.emit('delete', {items: selectedItems});
     hideOptions();
   });
 
@@ -168,12 +174,12 @@ function delFromSelection(id) {
 }
 
 function selectBetween(id, id2) {
-  loc1 = indexInSongView(id);
-  loc2 = indexInSongView(id2);
+  let loc1 = indexInSongView(id);
+  let loc2 = indexInSongView(id2);
 
   // make sure loc1 is less than loc2
   if (loc1 > loc2) {
-    temp = loc1;
+    let temp = loc1;
     loc1 = loc2;
     loc2 = temp;
   }
