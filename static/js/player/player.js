@@ -1,3 +1,9 @@
+/*
+global $, localStorage, MusicApp, SongModel, SongCollection, PlaylistCollection,
+on_mobile, prettyPrintSeconds, deAttribute, SongView, searchMatchesSong, socket,
+shuffle_array, Notification, cover_is_visible, cover_is_current, addToSelection,
+delFromSelection, showCover, InfoView, YT
+*/
 // main player class that is used by the player object to control the playing of songs
 
 function PlayState() {
@@ -66,7 +72,7 @@ function PlayState() {
     this.repeat_state = localStorage.getItem('repeat') || this.repeat_states.all;
     this.redrawRepeat();
     this.comp_name = localStorage.getItem('comp_name') || '';
-    this.volume = parseInt(localStorage.getItem('currentVolume')) || 100;
+    this.volume = parseInt(localStorage.getItem('currentVolume'), 10) || 100;
     this.PlayMethodAbstracter.setVolume(this.volume);
     this.onMobile = on_mobile;
   };
@@ -332,7 +338,7 @@ function PlayState() {
       this.setIsPlaying(true);
 
       // show the songs info
-      info = new InfoView();
+      let info = new InfoView();
       MusicApp.infoRegion.show(info);
 
       // update the selected item
@@ -342,8 +348,8 @@ function PlayState() {
       // update the window title
       window.document.title = this.current_song.attributes.title + ' - ' + this.current_song.attributes.display_artist;
 
-      // update the cover photo if it's showing fullscreen and the new song has cover art
       if (cover_is_visible && cover_is_current && this.current_song.attributes.cover_location) {
+        // update the cover photo if it's showing fullscreen and the new song has cover art
         showCover('cover/' + this.current_song.attributes.cover_location);
       }
 
@@ -595,7 +601,7 @@ function PlayState() {
   this.displayNotification = function() {
     // send a song change notification to the desktop:
     if ('Notification' in window) {
-      var showNotifiaction = function() {
+      var showNotification = function() {
         // build the notification data
         var notifTitle = 'Playing: ' + this.current_song.attributes.title;
         var notifOptions = {
@@ -621,11 +627,11 @@ function PlayState() {
 
       // check if we have permission, if not, ask for it
       if (Notification.permission === 'granted') {
-        showNotifiaction.bind(this)();
+        showNotification.bind(this)();
       } else if (Notification.permission !== 'denied') {
         Notification.requestPermission(function(permission) {
           if (permission === 'granted') {
-            showNotifiaction.bind(this)();
+            showNotification.bind(this)();
           }
         });
       }

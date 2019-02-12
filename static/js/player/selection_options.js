@@ -1,5 +1,5 @@
 // these functions handle selection of songs and drawing the (right click) context menu
-/* global player, socket, $, render, MusicApp, Messenger, showInfoView */
+/* global player, socket, $, render, MusicApp, Messenger, showInfoView, bootbox */
 
 var optionsVisible = false;
 var selectedItems = [];
@@ -35,9 +35,14 @@ function createOptions(x, y) {
     }))
     .css({top: y + 'px', left: x + 'px'});
   $('.add_to_queue').click(function(ev) {
-    for (var x = 0; x < selectedItems.length; x++) {
-      player.play_history.unshift(selectedItems[x]);
-      player.play_history_idx++;
+    if (player.shuffle_state) {
+      for (var x = 0; x < selectedItems.length; x++) {
+        player.shuffle_pool.splice(player.shuffle_idx, 0, player.song_collection.findBy_Id(selectedItems[x]));
+      }
+    } else {
+      for (var x = 0; x < selectedItems.length; x++) {
+        player.queue_pool.splice(player.current_index + 1, 0, player.song_collection.findBy_Id(selectedItems[x]));
+      }
     }
 
     hideOptions();
@@ -100,8 +105,25 @@ function createOptions(x, y) {
   });
 
   $('.delete_songs').click(function(ev) {
-    socket.emit('delete', {items: selectedItems});
     hideOptions();
+    bootbox.dialog({
+      message: 'Do you really want to delete these songs?',
+      title: 'Delete Songs',
+      buttons: {
+        cancel: {
+          label: 'Cancel',
+          className: 'btn-default',
+        },
+
+        del: {
+          label: 'Delete',
+          className: 'btn-danger',
+          callback: function() {
+            socket.emit('delete', {items: selectedItems});
+          },
+        },
+      },
+    });
   });
 
   $('.rewrite_tags').click(function(ev) {

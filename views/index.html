@@ -199,19 +199,20 @@
     {% if type == 'youtube' %}
       <li class="save_youtube"><a>Save to Library</a></li>
     {% endif %}
-    <li class='add_to_queue'><a>Add to Queue</a></li>
+    <li class='add_to_queue'><a>Play next</a></li>
     {% if numSelected == 1 %}
       {% if type == 'normal' %}
-        <li class="view_info"><a>Detailed Info</a></li>
+        <li class="view_info"><a>Detailed info</a></li>
       {% endif %}
-      <li class="similar_songs"><a>Generate Mix</a></li>
+      <li class="similar_songs"><a>Generate mix</a></li>
     {% endif %}
     {% if type == 'normal' %}
       <li class="rewrite_tags"><a>Write metadata to file</a></li>
       {% if current_playlist.editable %}
         <li class='remove_from_playlist' id='{{current_playlist._id}}'><a>Remove from playlist</a></li>
       {% endif %}
-      <li class="hard_rescan"><a>Hard Rescan</a></li>
+      <li class="hard_rescan"><a>Hard rescan</a></li>
+      <li class="delete_songs"><a>Delete song</a></li>
       <li class="divider"></li>
       <li class="delete_songs"><a>Delete</a></li>
       <li class="divider"></li>
