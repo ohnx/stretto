@@ -334,6 +334,7 @@
 var this_ip = "{{ip}}";
 var country_code = "{{country_code}}";
 var on_mobile = false;
+var auth_creds = {{ auth }};
 var player_themes = [{% for theme in player_themes %}"{{theme}}",{% endfor %}"null"];
 var player_theme = localStorage.getItem('theme') ? localStorage.getItem('theme') : "{{default_theme}}";
 if (player_themes.indexOf(player_theme) < 0) {
