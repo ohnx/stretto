@@ -640,6 +640,7 @@ function PlayState() {
 
   this.PlayMethodAbstracter = new (function() {
     this.isYoutubeElement = false;
+    this.isCasting = false;
 
     // html5 audio element
     this.audio_elem = document.getElementById('current_track');
@@ -647,6 +648,8 @@ function PlayState() {
 
     // youtube element
     this.ytplayer = null;
+
+    // Chromecast handle
 
     // event listeners that dispatch the events
     this.audio_elem.addEventListener('ended', function() {
@@ -670,11 +673,15 @@ function PlayState() {
           this.ytplayer.stopVideo();
         }
 
-        // load in the new audio track
-        this.audio_elem.pause();
-        this.srcElem.attr('src', 'songs/' + songInfo.attributes._id + '.mid');
-        this.audio_elem.load();
-        this.audio_elem.play();
+        if (this.isCasting) {
+          
+        } else {
+          // load in the new audio track
+          this.audio_elem.pause();
+          this.srcElem.attr('src', 'songs/' + songInfo.attributes._id + '.mid');
+          this.audio_elem.load();
+          this.audio_elem.play();
+        }
 
         // only set this for tracks as youtube ones won't be avialable on refresh
         localStorage.setItem('last_playing_id', songInfo.attributes._id);
@@ -720,6 +727,8 @@ function PlayState() {
     this.setCurrentTime = function(currentTime) {
       if (this.isYT) {
         this.ytplayer.seekTo(currentTime, true);
+      } else if (this.isCasting) {
+        // Set time
       } else {
         this.audio_elem.currentTime = currentTime;
       }
@@ -728,6 +737,8 @@ function PlayState() {
     this.getDuration = function() {
       if (this.isYT) {
         return this.ytplayer.getDuration();
+      } else if (this.isCasting) {
+        // Get duration
       } else {
         return this.audio_elem.duration;
       }
@@ -736,6 +747,8 @@ function PlayState() {
     this.pause = function() {
       if (this.isYT) {
         this.ytplayer.pauseVideo();
+      } else if (this.isCasting) {
+        // Pause
       } else {
         this.audio_elem.pause();
       }
@@ -744,6 +757,8 @@ function PlayState() {
     this.play = function() {
       if (this.isYT) {
         this.ytplayer.playVideo();
+      } else if (this.isCasting) {
+        // Play
       } else {
         this.audio_elem.play();
       }
