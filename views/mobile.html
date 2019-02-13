@@ -154,10 +154,11 @@
 <script type="text/javascript">
 var this_ip = "{{ip}}";
 var country_code = "{{country_code}}";
+var auth_creds = JSON.parse("{{ auth }}");
 var on_mobile = true;
 </script>
 {% endblock %}
 {% block scripts %}
-    "static/css/themes/default.css",
+    "static/css/themes/{{ default_theme }}.css",
     "static/css/mobile.css",
 {% endblock %}

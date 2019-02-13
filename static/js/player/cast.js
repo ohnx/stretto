@@ -19,6 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+/* global chrome */
 var CHROMECAST_SENDER = (function() {
   var obj = {};
 
@@ -46,8 +47,9 @@ var CHROMECAST_SENDER = (function() {
       chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
     );
 
+    console.log('Cast initializing...');
     chrome.cast.initialize(apiConfig, onInitSuccess, onInitError);
-  }
+  };
 
   /*
    * Listen for existing sessions with the receiver.
@@ -56,40 +58,48 @@ var CHROMECAST_SENDER = (function() {
     _session = session;
     _session.addUpdateListener(sessionUpdateListener);
 
+    console.log('Previous cast session restored');
     if (_startedCallback) _startedCallback();
-  }
+  };
 
   /*
    * Listen for changes to the session status.
    */
   var sessionUpdateListener = function(isAlive) {
+    console.log('Session status updated to ' + (isAlive ? 'alive' : 'dead'));
     if (!isAlive && _stoppedCallback) _stoppedCallback();
     else if (isAlive) _updateCallback();
-  }
+  };
 
   /*
    * Listen for receivers to become available.
    */
   var receiverListener = function(e) {
+    console.log('New receiver ready');
     if (e === chrome.cast.ReceiverAvailability.AVAILABLE && _readyCallback) _readyCallback();
-  }
+  };
 
   /*
    * Environment successfully initialized.
    */
-  var onInitSuccess = function(e) {}
+  var onInitSuccess = function(e) {
+    console.log('Chromecast successfully initialized');
+  };
 
   /*
    * Error initializing.
    */
-  var onInitError = function(e) {}
+  var onInitError = function(e) {
+    console.log('Chromecast failed to initialize: ', e);
+  };
 
   /*
    * Start casting.
    */
   obj.startCasting = function() {
+    console.log('Attempting casting');
     chrome.cast.requestSession(onRequestSessionSuccess, onRequestSessionError);
-  }
+  };
 
   /*
    * Casting session begun successfully.
@@ -97,42 +107,134 @@ var CHROMECAST_SENDER = (function() {
   var onRequestSessionSuccess = function(session) {
     _session = session;
     _session.addUpdateListener(sessionUpdateListener);
+    console.log('Chromecast started casting');
 
     if (_startedCallback) _startedCallback();
-  }
+  };
 
   /*
    * Casting session failed to start.
    */
-  var onRequestSessionError = function(e) {}
+  var onRequestSessionError = function(e) {
+    console.log('Chromecast failed casting: ', e);
+  };
 
   /*
    * Stop casting.
    */
   obj.stopCasting = function() {
-    _player = null;
-    _playerController = null;
+    console.log('Chromecast attempting stop casting');
     _session.stop(onSessionStopSuccess, onSessionStopError);
-  }
+  };
 
   /*
    * Inform client the session has stopped.
    */
   var onSessionStopSuccess = function() {
+    console.log('Chromecast successfully stopped casting');
     if (_stoppedCallback) _stoppedCallback();
-  }
+    // TOOD: should null?
+    _session = null;
+  };
 
-  var onSessionStopError = function() {}
+  var onSessionStopError = function() {
+    console.log('Chromecast failed to stop casting');
+    // TODO: should null?
+    _session = null;
+  };
 
   /*
-   * Successfully sent message to receiver.
+   * Cast a song
    */
-  var onSendSuccess = function(message) {}
+  obj.castAudio = function(audio, metadata, callback_start, callback_update) {
+    // Start casting the current song
+    var mediaInfo = new chrome.cast.media.MediaInfo(audio, "audio/mpeg");
+    mediaInfo.metadata = metadata;
+    var request = new chrome.cast.media.LoadRequest(mediaInfo);
+    console.log('Submitting load request for song url', audio);
+    _session.loadMedia(request, function() {
+        console.log('Load succeeded');
+        // Hook media update callback
+        if (callback_update) {
+          console.log('Hooking request at no. ', _session.media.length-1);
+          _session.media[_session.media.length-1].addUpdateListener(callback_update);
+        }
+        if (callback_start) callback_start();
+      }, function(errorCode) {
+        console.log('Load Error code: ', errorCode);
+        if (callback_start) callback_start(errorCode);
+      }
+    );
+  };
 
   /*
-   * Error sending message to receiver.
+   * Pause a song
    */
-  var onSendError = function(message) {}
+  obj.pause = function(callback) {
+    if (_session.media.length <= 0) callback(true);
+    // Pause the current song
+    var request = new chrome.cast.media.PauseRequest();
+    console.log('Submitting pause request');
+    _session.media[0].pause(request, function() {
+        console.log('Pause succeeded');
+        if (callback) callback();
+      }, function(errorCode) {
+        console.log('Pause Error code: ', errorCode);
+        if (callback) callback(errorCode);
+      }
+    );
+  };
+
+  /*
+   * Play a song
+   */
+  obj.play = function(callback) {
+    if (_session.media.length <= 0) callback(true);
+    // Play the current song
+    var request = new chrome.cast.media.PlayRequest();
+    console.log('Submitting play request');
+    _session.media[0].play(request, function() {
+        console.log('Play succeeded');
+        if (callback) callback();
+      }, function(errorCode) {
+        console.log('Play Error code: ', errorCode);
+        if (callback) callback(errorCode);
+      }
+    );
+  };
+
+  /*
+   * Seek to a time in the song
+   */
+  obj.seek = function(time, callback) {
+    if (_session.media.length <= 0) callback(true);
+    // Seek the current song
+    var request = new chrome.cast.media.SeekRequest();
+    request.currentTime = time;
+    console.log('Submitting seek request');
+    _session.media[0].seek(request, function() {
+        console.log('Seek succeeded');
+        if (callback) callback();
+      }, function(errorCode) {
+        console.log('Seek Error code: ', errorCode);
+        if (callback) callback(errorCode);
+      }
+    );
+  };
+
+  /*
+   * Get current playback progress
+   */
+  obj.pbprog = function() {
+    return _session.media.length > 0 ? _session.media[0].getEstimatedTime() : 0;
+  };
+
+  /*
+   * Get current duration
+   */
+  obj.pbdur = function() {
+    return _session.media.length > 0 ? _session.media[0].media.duration : 0;
+  };
 
   return obj;
 }());
@@ -141,60 +243,32 @@ var CHROMECAST_SENDER = (function() {
  * A cast device is available.
  */
 var onCastReady = function() {
-  $castStart.show();
-};
-
-/*
- * A cast session started.
- */
-var onCastStarted = function() {
-  // set a global variable to make special casing code on the sender easier
-  is_casting = true;
-
-  // Start casting the current song
-  var mediaInfo = new chrome.cast.media.MediaInfo(/* current audio */"audio.mp3", "audio/mpeg");
-  var request = new chrome.cast.media.LoadRequest(mediaInfo);
-  CHROMECAST_SENDER._session.loadMedia(request).then(
-    function() { console.log('Load succeed'); },
-    function(errorCode) { console.log('Error code: ' + errorCode);
-  });
-};
-
-/*
- * A cast session stopped.
- */
-var onCastStopped = function() {
-  is_casting = false;
+  
 };
 
 /*
  * A cast session was updated.
  */
 var onCastUpdate = function() {
-  CHROMECAST_SENDER._session
+  console.log('Cast session Update received');
 };
 
 /*
  * Begin chromecasting.
  */
 var onCastStartClick = function(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
 
   // fire the Chromecast-specific start function, which will fire the callback defined below
   CHROMECAST_SENDER.startCasting();
-}
+};
 
 /*
  * Stop chromecasting.
  */
 var onCastStopClick = function(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
 
   // fire the Chromecast-specific stop function, which will fire the callback defined below
   CHROMECAST_SENDER.stopCasting();
-}
-
-/* event for if user has chromecast support */
-window['__onGCastApiAvailable'] = function(isAvailable) {
-  if (isAvailable) CHROMECAST_SENDER.setup(onCastReady, onCastStarted, onCastStopped, onCastUpdate);
 };

@@ -43,6 +43,7 @@
       <i id="playpause" class="fa fa-play fa-3x"></i>
       <i id="next" class="fa fa-fast-forward fa-3x"></i>
       <i id="shuffle" class="fa fa-random fa-3x"></i>
+      <google-cast-launcher></google-cast-launcher>
     </div>
     <div id="settings_bar">
     </div>
@@ -331,6 +332,7 @@
 <script type="text/javascript">
 var this_ip = "{{ip}}";
 var country_code = "{{country_code}}";
+var auth_creds = JSON.parse("{{ auth }}");
 var on_mobile = false;
 var player_themes = [{% for theme in player_themes %}"{{theme}}",{% endfor %}"null"];
 var player_theme = localStorage.getItem('theme') ? localStorage.getItem('theme') : "{{default_theme}}";
@@ -341,4 +343,5 @@ if (player_themes.indexOf(player_theme) < 0) {
 {% endblock %}
 {% block scripts %}
     "static/css/themes/" + player_theme + ".css",
+    "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js",                                            
 {% endblock %}
