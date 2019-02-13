@@ -75,7 +75,6 @@ var CHROMECAST_SENDER = (function() {
    * Listen for receivers to become available.
    */
   var receiverListener = function(e) {
-    console.log('New receiver ready');
     if (e === chrome.cast.ReceiverAvailability.AVAILABLE && _readyCallback) _readyCallback();
   };
 
@@ -83,7 +82,6 @@ var CHROMECAST_SENDER = (function() {
    * Environment successfully initialized.
    */
   var onInitSuccess = function(e) {
-    console.log('Chromecast successfully initialized');
   };
 
   /*
@@ -97,7 +95,6 @@ var CHROMECAST_SENDER = (function() {
    * Start casting.
    */
   obj.startCasting = function() {
-    console.log('Attempting casting');
     chrome.cast.requestSession(onRequestSessionSuccess, onRequestSessionError);
   };
 
@@ -123,7 +120,6 @@ var CHROMECAST_SENDER = (function() {
    * Stop casting.
    */
   obj.stopCasting = function() {
-    console.log('Chromecast attempting stop casting');
     _session.stop(onSessionStopSuccess, onSessionStopError);
   };
 
@@ -151,12 +147,9 @@ var CHROMECAST_SENDER = (function() {
     var mediaInfo = new chrome.cast.media.MediaInfo(audio, "audio/mpeg");
     mediaInfo.metadata = metadata;
     var request = new chrome.cast.media.LoadRequest(mediaInfo);
-    console.log('Submitting load request for song url', audio);
     _session.loadMedia(request, function() {
-        console.log('Load succeeded');
         // Hook media update callback
         if (callback_update) {
-          console.log('Hooking request at no. ', _session.media.length-1);
           _session.media[_session.media.length-1].addUpdateListener(callback_update);
         }
         if (callback_start) callback_start();
@@ -174,9 +167,7 @@ var CHROMECAST_SENDER = (function() {
     if (_session.media.length <= 0) callback(true);
     // Pause the current song
     var request = new chrome.cast.media.PauseRequest();
-    console.log('Submitting pause request');
     _session.media[0].pause(request, function() {
-        console.log('Pause succeeded');
         if (callback) callback();
       }, function(errorCode) {
         console.log('Pause Error code: ', errorCode);
@@ -192,9 +183,7 @@ var CHROMECAST_SENDER = (function() {
     if (_session.media.length <= 0) callback(true);
     // Play the current song
     var request = new chrome.cast.media.PlayRequest();
-    console.log('Submitting play request');
     _session.media[0].play(request, function() {
-        console.log('Play succeeded');
         if (callback) callback();
       }, function(errorCode) {
         console.log('Play Error code: ', errorCode);
@@ -211,9 +200,7 @@ var CHROMECAST_SENDER = (function() {
     // Seek the current song
     var request = new chrome.cast.media.SeekRequest();
     request.currentTime = time;
-    console.log('Submitting seek request');
     _session.media[0].seek(request, function() {
-        console.log('Seek succeeded');
         if (callback) callback();
       }, function(errorCode) {
         console.log('Seek Error code: ', errorCode);
