@@ -9,9 +9,6 @@ You can view a version hosted [on Heroku](https://stretto-demo.herokuapp.com/).
 
 To have the full functionality and to use your own music please follow the install instructions below.
 
-The music I have used for the hosted version is copyright of [Social Club](http://martymar.goodcitymusic.com/).
-To purchase or download their music visit [their website](https://socialxclub.bandcamp.com).
-
 ### User Installation Instructions
 
 Visit the [releases page](https://github.com/benkaiser/stretto/releases) for the latest release,
@@ -46,7 +43,7 @@ Alternatively, install PM2 (read more about PM2 at [pm2.keymetrics.io](http://pm
 pm2 start app.js
 ```
 
-Go to `localhost:2000` in your browser (or known IP of server if it is on a different machine). From there a prompt will allow you to change your music directory, after saving your music directory you can click `Scan Library -> Regular Scan` at the top of the page. From there select `Start Scan` and let it do it's magic adding all the songs to your library. Happy listening!
+Go to `localhost:2000` in your browser (or known IP of server if it is on a different machine). From there a prompt will allow you to change your music directory, after saving your music directory you can click `Scan Library -> Regular Scan` at the top of the page. From there select `Start Scan` and let it do its magic adding all the songs to your library. Happy listening!
 
 ### Submitting issues
 
@@ -54,8 +51,7 @@ Please include:
 
 - operating system
 - architecture (32bit or 64bit)
-- nodejs version `node --version`
-- npm version `npm --version`
+- nodejs and npm versions (`node --version`, `npm --version`) or electron build version
 
 Then include steps to reproduce followed by what you were aiming to do / expected to happen, and what did happen.
 
@@ -80,7 +76,6 @@ bindsym $mod+Next exec curl http://localhost:2000/command/my_remote_name/prev
 bindsym $mod+Prior exec curl http://localhost:2000/command/my_remote_name/next
 ```
 
-
 ### Features Implemented
 
 #### Defining Features
@@ -88,7 +83,9 @@ bindsym $mod+Prior exec curl http://localhost:2000/command/my_remote_name/next
 - Sync between computers (share your library with your friends!)
 - Generate mix from songs streamed from YouTube, allowing you to explore new music from your current library
 - Download from YouTube and SoundCloud
+- Remote control functionality using simple HTTP API
 - Built in the open with other open source libraries
+- Supports Chromecast!
 
 #### Simple Features
 - View full-resolution cover art
@@ -96,10 +93,11 @@ bindsym $mod+Prior exec curl http://localhost:2000/command/my_remote_name/next
 - Multiple selection
 - Repeat, repeat one and shuffle
 - Search functionality
+- Basic authentication
 
 ### Planned features
 
-- See the projects public [Trello board](https://trello.com/b/cXdOSOoR/stretto) for features planned / implemented. If you want to request a feature, please [create an issue](https://github.com/ohnx/stretto/issues/new).
+- See the project's public [Trello board](https://trello.com/b/cXdOSOoR/stretto) and the [public issues tracker](https://github.com/ohnx/stretto/issues/new).
 
 ### License
 
