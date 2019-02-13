@@ -116,7 +116,7 @@ function musicRoute(req, res) {
         music_dir: config.music_dir,
         music_dir_set: config.music_dir_set,
         country_code: config.country_code,
-        auth: ('auth' in config)? config.auth : {};
+        auth: ('auth' in config) ? config.auth : {},
         player_themes: config.player_themes,
         default_theme: config.player_themes[0],
         random_array: [1,2,3,4],

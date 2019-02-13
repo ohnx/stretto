@@ -2,7 +2,7 @@
 global $, localStorage, MusicApp, SongModel, SongCollection, PlaylistCollection,
 on_mobile, prettyPrintSeconds, deAttribute, SongView, searchMatchesSong, socket,
 shuffle_array, Notification, cover_is_visible, cover_is_current, addToSelection,
-delFromSelection, showCover, InfoView, YT
+delFromSelection, showCover, InfoView, YT, CHROMECAST_SENDER, auth_creds, onCastReady, onCastUpdate, chrome
 */
 // main player class that is used by the player object to control the playing of songs
 
@@ -640,6 +640,9 @@ function PlayState() {
 
   this.PlayMethodAbstracter = new (function() {
     this.isYoutubeElement = false;
+    this.isCasting = false;
+    this.castIgnoreStatus = true;
+    this.currSongInfo = null;
 
     // html5 audio element
     this.audio_elem = document.getElementById('current_track');
@@ -647,6 +650,8 @@ function PlayState() {
 
     // youtube element
     this.ytplayer = null;
+
+    // Chromecast handle = CHROMECAST_SENDER
 
     // event listeners that dispatch the events
     this.audio_elem.addEventListener('ended', function() {
@@ -660,7 +665,24 @@ function PlayState() {
         this.durationChangeHandler();
     }.bind(this));
 
+    this.fullurl = function(fragment) {
+      // This will return ["PROTO", "BASEURL/PATH#HASH"]
+      var pu = window.location.href.split('//');
+      // Remove the #HASH part
+      pu[1] = pu[1].split('#')[0];
+
+      if ('username' in auth_creds && 'password' in auth_creds) {
+        // Append in the auth credentials
+        pu[1] = auth_creds.username + ':' + auth_creds.password + '@' + pu[1];
+      }
+      pu[1] += fragment;
+
+      return pu.join('//');
+    };
+
     this.playTrack = function(songInfo) {
+      this.currSongInfo = songInfo;
+
       if (!songInfo.attributes.is_youtube) {
         // set the state
         this.isYT = false;
@@ -670,11 +692,24 @@ function PlayState() {
           this.ytplayer.stopVideo();
         }
 
-        // load in the new audio track
-        this.audio_elem.pause();
-        this.srcElem.attr('src', 'songs/' + songInfo.attributes._id + '.mid');
-        this.audio_elem.load();
-        this.audio_elem.play();
+        if (this.isCasting) {
+          this.castIgnoreStatus = true;
+          var mediaMeta = new chrome.cast.media.MusicTrackMediaMetadata();
+          mediaMeta.albumArtist = songInfo.attributes.albumArtist;
+          mediaMeta.albumName = songInfo.attributes.album;
+          mediaMeta.artist = songInfo.attributes.display_artist;
+          mediaMeta.images = [new chrome.cast.Image(this.fullurl('cover/' + songInfo.attributes.cover_location))];
+          mediaMeta.releaseYear = songInfo.attributes.year;
+          mediaMeta.songName = mediaMeta.title = songInfo.attributes.title;
+
+          CHROMECAST_SENDER.castAudio(this.fullurl('songs/' + songInfo.attributes._id + '.mid'), mediaMeta, null, this.onCastStateChange);
+        } else {
+          // load in the new audio track
+          this.audio_elem.pause();
+          this.srcElem.attr('src', this.fullurl('songs/' + songInfo.attributes._id + '.mid'));
+          this.audio_elem.load();
+          this.audio_elem.play();
+        }
 
         // only set this for tracks as youtube ones won't be avialable on refresh
         localStorage.setItem('last_playing_id', songInfo.attributes._id);
@@ -707,12 +742,15 @@ function PlayState() {
         } else {
           return lastYoutubeTime + ((+new Date()) - lastYoutubeUpdate) / 1000;
         }
+      } else if (this.isCasting) {
+        // Update the audio element current time, too
+        var ct = CHROMECAST_SENDER.pbprog();
+        localStorage.setItem('currentTime', ct);
+        return ct;
       } else {
         // update the current time only if it's not a youtube video
         // since we will lose the youtube video on refresh
         localStorage.setItem('currentTime', this.audio_elem.currentTime);
-
-        // return the current time
         return this.audio_elem.currentTime;
       }
     };
@@ -720,6 +758,8 @@ function PlayState() {
     this.setCurrentTime = function(currentTime) {
       if (this.isYT) {
         this.ytplayer.seekTo(currentTime, true);
+      } else if (this.isCasting) {
+        CHROMECAST_SENDER.seek(currentTime);
       } else {
         this.audio_elem.currentTime = currentTime;
       }
@@ -728,6 +768,8 @@ function PlayState() {
     this.getDuration = function() {
       if (this.isYT) {
         return this.ytplayer.getDuration();
+      } else if (this.isCasting) {
+        return CHROMECAST_SENDER.pbdur();
       } else {
         return this.audio_elem.duration;
       }
@@ -736,6 +778,8 @@ function PlayState() {
     this.pause = function() {
       if (this.isYT) {
         this.ytplayer.pauseVideo();
+      } else if (this.isCasting) {
+        CHROMECAST_SENDER.pause();
       } else {
         this.audio_elem.pause();
       }
@@ -744,6 +788,8 @@ function PlayState() {
     this.play = function() {
       if (this.isYT) {
         this.ytplayer.playVideo();
+      } else if (this.isCasting) {
+        CHROMECAST_SENDER.play();
       } else {
         this.audio_elem.play();
       }
@@ -766,7 +812,7 @@ function PlayState() {
       this.durationChangeHandler();
 
       this.setVolume(player.volume);
-    };
+    }.bind(this);
 
     this.onYoutubeStateChange = function(event) {
       // when the song ends, call the player function for onend
@@ -774,7 +820,7 @@ function PlayState() {
         if (this.endHandler)
           this.endHandler();
       }
-    };
+    }.bind(this);
 
     this.setupYoutube = function() {
       this.ytplayer = new YT.Player('player', {
@@ -786,7 +832,48 @@ function PlayState() {
           onStateChange: this.onYoutubeStateChange.bind(this),
         },
       });
-    }; // force this method to be called with the current context
+    };
+
+    // Set up casting
+    this.onCastStart = function() {
+      // Do nothing for youtube videos
+      if (this.isYoutubeElement) return;
+
+      console.log('Cast starting!');
+
+      this.isCasting = false;
+
+      // Pause current song audio element since we want to play on the cast device instead
+      this.pause();
+      var ct = this.getCurrentTime();
+
+      this.isCasting = true;
+      this.castIgnoreStatus = true;
+
+      // Load current song into cast
+      this.playTrack(this.currSongInfo);
+
+      // set seek
+      setTimeout(function() {this.setCurrentTime(ct);}.bind(this), 300);
+    }.bind(this);
+
+    this.onCastEnd = function() {
+      console.log('Cast ending!');
+
+      var ct = this.getCurrentTime();
+
+      this.isCasting = false;
+      // Load current song into audio element
+      this.playTrack(this.currSongInfo);
+
+      // set seek
+      setTimeout(function() {this.setCurrentTime(ct);}.bind(this), 100);
+    }.bind(this);
+
+    this.onCastStateChange = function(mediaAlive) {
+      if (!this.castIgnoreStatus && !mediaAlive && this.endHandler) this.endHandler();
+      if (this.castIgnoreStatus && mediaAlive) this.castIgnoreStatus = false;
+    }.bind(this);
   });
 
   // attach to the PlayMethodAbstracter events
@@ -803,3 +890,11 @@ player.setupCollections();
 function onYouTubeIframeAPIReady() {
   player.PlayMethodAbstracter.setupYoutube();
 }
+
+/* event for if user has chromecast support */
+window['__onGCastApiAvailable'] = function(isAvailable) {
+  if (isAvailable) {
+    console.log('Setting up casting!');
+    CHROMECAST_SENDER.setup(onCastReady, player.PlayMethodAbstracter.onCastStart, player.PlayMethodAbstracter.onCastEnd, onCastUpdate);
+  }
+};

@@ -43,6 +43,7 @@
       <i id="playpause" class="fa fa-play fa-3x"></i>
       <i id="next" class="fa fa-fast-forward fa-3x"></i>
       <i id="shuffle" class="fa fa-random fa-3x"></i>
+      <google-cast-launcher></google-cast-launcher>
     </div>
     <div id="settings_bar">
     </div>
@@ -214,8 +215,6 @@
       <li class="hard_rescan"><a>Hard rescan</a></li>
       <li class="delete_songs"><a>Delete song</a></li>
       <li class="divider"></li>
-      <li class="delete_songs"><a>Delete</a></li>
-      <li class="divider"></li>
       {% if recents.length %}
         <li role="presentation" class="dropdown-header">Recents</li>
         {% for playlist in recents %}
@@ -333,6 +332,11 @@
 <script type="text/javascript">
 var this_ip = "{{ip}}";
 var country_code = "{{country_code}}";
+{% if ('username' in auth && 'password' in auth) %}
+var auth_creds = {username: "{{ auth.username }}", password: "{{ auth.username }}"};
+{% else %}
+var auth_creds = {};
+{% endif %}
 var on_mobile = false;
 var auth_creds = {{ auth }};
 var player_themes = [{% for theme in player_themes %}"{{theme}}",{% endfor %}"null"];
@@ -344,4 +348,5 @@ if (player_themes.indexOf(player_theme) < 0) {
 {% endblock %}
 {% block scripts %}
     "static/css/themes/" + player_theme + ".css",
+    "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js",                                            
 {% endblock %}
