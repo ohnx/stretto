@@ -154,9 +154,12 @@
 <script type="text/javascript">
 var this_ip = "{{ip}}";
 var country_code = "{{country_code}}";
-var auth_creds = JSON.parse("{{{ auth }}}");
+{% if ('username' in auth && 'password' in auth) %}
+var auth_creds = {username: "{{ auth.username }}", password: "{{ auth.username }}"};
+{% else %}
+var auth_creds = {};
+{% endif %}
 var on_mobile = true;
-var auth_creds = {{ auth }};
 </script>
 {% endblock %}
 {% block scripts %}
