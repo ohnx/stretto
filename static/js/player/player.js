@@ -759,7 +759,6 @@ function PlayState() {
       if (this.isYT) {
         this.ytplayer.seekTo(currentTime, true);
       } else if (this.isCasting) {
-        console.log(currentTime);
         CHROMECAST_SENDER.seek(currentTime);
       } else {
         this.audio_elem.currentTime = currentTime;
@@ -854,14 +853,21 @@ function PlayState() {
       // Load current song into cast
       this.playTrack(this.currSongInfo);
 
-      // TODO: set seek
-      this.setCurrentTime(ct);
+      // set seek
+      setTimeout(function() {this.setCurrentTime(ct);}.bind(this), 300);
     }.bind(this);
 
     this.onCastEnd = function() {
       console.log('Cast ending!');
+
+      var ct = this.getCurrentTime();
+
       this.isCasting = false;
+      // Load current song into audio element
       this.playTrack(this.currSongInfo);
+
+      // set seek
+      setTimeout(function() {this.setCurrentTime(ct);}.bind(this), 100);
     }.bind(this);
 
     this.onCastStateChange = function(mediaAlive) {

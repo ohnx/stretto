@@ -164,7 +164,7 @@ var CHROMECAST_SENDER = (function() {
    * Pause a song
    */
   obj.pause = function(callback) {
-    if (_session.media.length <= 0) callback(true);
+    if (_session.media.length <= 0) return;
     // Pause the current song
     var request = new chrome.cast.media.PauseRequest();
     _session.media[0].pause(request, function() {
@@ -180,7 +180,7 @@ var CHROMECAST_SENDER = (function() {
    * Play a song
    */
   obj.play = function(callback) {
-    if (_session.media.length <= 0) callback(true);
+    if (_session.media.length <= 0) return;
     // Play the current song
     var request = new chrome.cast.media.PlayRequest();
     _session.media[0].play(request, function() {
@@ -196,7 +196,7 @@ var CHROMECAST_SENDER = (function() {
    * Seek to a time in the song
    */
   obj.seek = function(time, callback) {
-    if (_session.media.length <= 0) callback(true);
+    if (_session.media.length <= 0) return;
     // Seek the current song
     var request = new chrome.cast.media.SeekRequest();
     request.currentTime = time;
