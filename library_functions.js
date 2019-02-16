@@ -742,7 +742,7 @@ exports.sync_import = function(songs, url) {
         var song_file_url = app.get('config').music_dir + songs[cnt].location;
 
         // download the file
-        request(url + '/songs/' + songs[cnt]._id).on('end', function() {
+        request(url + '/songs/' + songs[cnt]._id + '.mid').on('end', function() {
           // once the song has been transferred successfully
           var addSong = function(song) {
             // if the song doesn't have the dates set, set them
