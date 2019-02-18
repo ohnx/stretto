@@ -53,7 +53,11 @@ async.series([function createDatabaseDirectory(next) {
   require(__dirname + '/patches.js')(app);
 
   // attach the config
-  app.set('config', require(__dirname + '/config')(app));
+  try {
+    app.set('config', require(__dirname + '/config')(app));
+  } catch (e){
+    app.set('config', require(__dirname + '/config.defaults')(app));
+  }
 
   next();
 }, function setupAuth(next) {
