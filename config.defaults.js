@@ -14,7 +14,7 @@ function Config(app) {
   this.is_electron = Boolean(process.env.ELECTRON_ENABLED || false);
   this.initialized = false;
   this.music_dir = '';
-  this.player_themes = ['cerulean','cosmo','cyborg','darkly','flatly','lumen','solar','united','yeti'];
+  this.player_themes = ['cerulean','cosmo','cyborg','darkly','flatly','journal','lumen','paper','readable','sandstone','simplex','slate','spacelab','superhero','united','yeti'];
   this.music_dir_set = false;
   this.soundcloud = {
     dl_dir: 'soundcloud',

@@ -1,5 +1,6 @@
 node_modules/*
 bower_components/*
 static/lib/*
+static/css/themes/*
 dbs/*
 config.js

@@ -6,25 +6,43 @@
   "license": "MIT",
   "scripts": {
     "start": "node app.js",
-    "nodemon": "nodemon app.js -e 'html css js'",
-    "postinstall": "./node_modules/grunt-cli/bin/grunt",
-    "build": "./electronres/buildpackages.sh"
+    "buildelectron": "./electronres/buildpackages.sh",
+    "install": "napa",
+    "postinstall": "./node_modules/grunt-cli/bin/grunt"
+  },
+  "napa": {
+    "civswig": "civitaslearning/swig-bower",
+    "datejs": "abritinthebay/datejs"
   },
   "dependencies": {
     "archiver": "^1.0.0",
     "async": "*",
+    "backbone": "^1.3.3",
+    "backbone.babysitter": "^0.1.12",
+    "backbone.marionette": "git+https://github.com/marionettejs/backbone.marionette.git#v2.4.5",
+    "backbone.wreqr": "^1.4.0",
     "basic-auth-connect-ohnx-fork": "^1.0.0",
     "body-parser": "^1.14.1",
+    "bootbox": "^4.4.0",
+    "bootstrap": "^3.4.0",
+    "bootstrap-slider": "^10.6.1",
+    "bootswatch": "^3.4.1",
     "connect-busboy": "*",
     "cookie-parser": "^1.4.0",
     "cors": "^2.8.5",
     "errorhandler": "^1.4.2",
     "express-http-proxy": "^0.3.0",
     "express.oi": "0.0.21",
+    "font-awesome": "^4.7.0",
+    "headjs": "^1.0.3",
+    "jquery-ui": "git+https://github.com/jquery/jquery-ui.git#1.11.4",
+    "lastfm-api": "git+https://github.com/molefrog/lastfm-api",
     "md5": "*",
+    "messenger": "git+https://github.com/HubSpot/messenger.git",
     "mkdirp": "*",
     "mobile-detect": "^0.4.3",
     "musicmetadata": "*",
+    "mustache": "^3.0.1",
     "nedb": "*",
     "opener": "*",
     "request": "*",
@@ -32,8 +50,10 @@
     "similar-songs": "^0.1.3",
     "song-search": "^0.1.0",
     "soundcloud-resolver": "*",
-    "swig": "*",
-    "youtube-playlist-info": "^0.1.0",
+    "swig": "^1.4.2",
+    "tablesort": "^5.1.0",
+    "underscore": "^1.9.1",
+    "youtube-playlist-info": "^1.1.2",
     "ytdl-core": "^0.29.1"
   },
   "optionalDependencies": {
@@ -41,12 +61,14 @@
     "fluent-ffmpeg": "~2.0.0-rc1"
   },
   "devDependencies": {
+    "copy-webpack-plugin": "^4.6.0",
     "electron-packager": "^13.0.1",
-    "grunt": "^0.4.5",
-    "grunt-bower-install-simple": "^1.2.0",
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-cssmin": "^0.12.2",
-    "grunt-contrib-uglify": "^0.8.0"
+    "grunt": "^1.0.3",
+    "grunt-cli": "^1.3.2",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^3.0.0",
+    "grunt-contrib-uglify": "^4.0.0",
+    "grunt-http": "^2.3.1",
+    "napa": "^3.0.0"
   }
 }
