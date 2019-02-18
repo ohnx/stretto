@@ -95,6 +95,7 @@ function showInfoView(items) {
     var lastfm = new LastFM({
       apiKey: '4795cbddcdec3a6b3f622235caa4b504',
       apiSecret: 'cbe22daa03f35df599746f590bf015a5',
+      apiUrl: 'https://ws.audioscrobbler.com/2.0/'
     });
 
     // fetch the cover from last fm by the artist and album
