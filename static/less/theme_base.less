@@ -1,20 +1,3 @@
-/* -=-=-=-=[ bootstrap/bootswatch ]=-=-=-=-*/
-@import "bootstrap/less/bootstrap.less";
-@import "bootswatch/@{theme_using}/variables.less";
-/*
-part 1 of a necessary fix to get bootswatch working...
-See: https://github.com/thomaspark/bootswatch/issues/573#issuecomment-379241721
-     https://github.com/thomaspark/bootswatch/issues/841
-basically @path is not defined but @web-font-path is, so we set it.
-this is a terrible hack.
-*/
-@path: @web-font-path;
-@import "bootswatch/@{theme_using}/bootswatch.less";
-
-/* -=-=-=-=[ bootstrap slider ]=-=-=-=-*/
-@import "bootstrap-slider/src/less/rules.less";
-@import "bootstrap-slider/src/less/variables.less";
-
 /* -=-=-=-=[ stretto-specific stuff ]=-=-=-=-*/
 body {
   padding-top: 32px;

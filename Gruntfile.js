@@ -1,30 +1,39 @@
 module.exports = function(grunt) {
-  let themes = ['cerulean','cosmo','cyborg','darkly','flatly','journal','lumen','paper','readable','sandstone','simplex','slate','spacelab','superhero','united','yeti'];
-  var lessTasks = {};
-  var borkedThemes = ['cerulean', 'slate'];
+  let bootswatchThemes = ['cerulean','cosmo','cyborg','darkly','flatly','journal','lumen','paper','readable','sandstone','simplex','slate','spacelab','superhero','united','yeti'];
+  let customThemes = ['darkforest', 'zesty'];
+  let lessTasks = {};
+  let borkedThemes = ['cerulean', 'slate'];
 
-  for (var i = 0; i < themes.length; i++) {
-    lessTasks[themes[i]] = {
+  for (var i = 0; i < bootswatchThemes.length; i++) {
+    lessTasks[bootswatchThemes[i]] = {
       options: {
         modifyVars: {
-          theme_using: themes[i],
-          theme_bootstrap: true
+          theme_using: bootswatchThemes[i]
         }
       },
       files: {}
     };
-    if (borkedThemes.includes(themes[i])) {
+    if (borkedThemes.includes(bootswatchThemes[i])) {
       /* some themes don't have @web-font-path set, so they get borked by an undefined variable */
       /* I would've loved to have some sort of "if undefined" thing, but apparently that doesn't exist in less */
-      lessTasks[themes[i]].options.modifyVars['web-font-path'] = 'potato';
+      lessTasks[bootswatchThemes[i]].options.modifyVars['web-font-path'] = 'potato';
     }
-    lessTasks[themes[i]].files['static/css/themes/' + themes[i] + '.css'] = 'static/less/theme_base.less';
+    lessTasks[bootswatchThemes[i]].files['static/css/themes/' + bootswatchThemes[i] + '.css'] = 'static/less/bootswatch.less';
+    
+  }
+
+  for (var i = 0; i < customThemes.length; i++) {
+    lessTasks[customThemes[i]] = {
+      options: {},
+      files: {}
+    };
+    lessTasks[customThemes[i]].files['static/css/themes/' + customThemes[i] + '.css'] = 'static/less/' + customThemes[i] + '.less';
   }
 
   // Project configuration.
   grunt.initConfig({
     http: {
-      your_service: {
+      jquery: {
         options: {
           url: 'https://code.jquery.com/jquery-2.2.4.js',
         },
