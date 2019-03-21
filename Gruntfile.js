@@ -1,28 +1,24 @@
 module.exports = function(grunt) {
-
   let themes = ['cerulean','cosmo','cyborg','darkly','flatly','journal','lumen','paper','readable','sandstone','simplex','slate','spacelab','superhero','united','yeti'];
-  let dark_themes = ['cyborg', 'darkly', 'slate', 'superhero'];
-  let cssminfiles = {
-    'static/lib/libs.min.css': [
-      'node_modules/bootstrap-slider/dist/css/bootstrap-slider.css',
-      'node_modules/messenger/build/css/messenger.css',
-      'node_modules/messenger/build/css/messenger-theme-air.css',
-    ]
-  };
+  var lessTasks = {};
+  var borkedThemes = ['cerulean', 'slate'];
 
   for (var i = 0; i < themes.length; i++) {
-    let cssfiles = [];
-
-    cssfiles.push('node_modules/bootswatch/' + themes[i] + '/bootstrap.css');
-    cssfiles.push('static/css/common.css');
-
-    if (dark_themes.includes(themes[i])) {
-      // cssfiles.push();
-    } else {
-      
+    lessTasks[themes[i]] = {
+      options: {
+        modifyVars: {
+          theme_using: themes[i],
+          theme_bootstrap: true
+        }
+      },
+      files: {}
+    };
+    if (borkedThemes.includes(themes[i])) {
+      /* some themes don't have @web-font-path set, so they get borked by an undefined variable */
+      /* I would've loved to have some sort of "if undefined" thing, but apparently that doesn't exist in less */
+      lessTasks[themes[i]].options.modifyVars['web-font-path'] = 'potato';
     }
-
-    cssminfiles['static/css/themes/' + themes[i] + '.css'] = cssfiles;
+    lessTasks[themes[i]].files['static/css/themes/' + themes[i] + '.css'] = 'static/less/theme_base.less';
   }
 
   // Project configuration.
@@ -84,24 +80,32 @@ module.exports = function(grunt) {
             nonull: true,
             sourceMap: true
           }
-        ],
-      },
+        ]
+      }
     },
+    /* css tasks now */
+    less: lessTasks,
     cssmin: {
       options: {
         shorthandCompacting: false,
         roundingPrecision: -1,
       },
       target: {
-        files: cssminfiles,
-      },
-    },
+        files: {
+          'static/lib/libs.min.css': [
+            'node_modules/messenger/build/css/messenger.css',
+            'node_modules/messenger/build/css/messenger-theme-air.css',
+          ]
+        }
+      }
+    }
   });
 
   grunt.loadNpmTasks('grunt-http');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-  grunt.registerTask('default', ['http', 'copy', 'uglify', 'cssmin']);
+  grunt.registerTask('default', ['http', 'copy', 'uglify', 'less', 'cssmin']);
 };

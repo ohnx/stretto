@@ -1,4 +1,22 @@
-body{
+/* -=-=-=-=[ bootstrap/bootswatch ]=-=-=-=-*/
+@import "bootstrap/less/bootstrap.less";
+@import "bootswatch/@{theme_using}/variables.less";
+/*
+part 1 of a necessary fix to get bootswatch working...
+See: https://github.com/thomaspark/bootswatch/issues/573#issuecomment-379241721
+     https://github.com/thomaspark/bootswatch/issues/841
+basically @path is not defined but @web-font-path is, so we set it.
+this is a terrible hack.
+*/
+@path: @web-font-path;
+@import "bootswatch/@{theme_using}/bootswatch.less";
+
+/* -=-=-=-=[ bootstrap slider ]=-=-=-=-*/
+@import "bootstrap-slider/src/less/rules.less";
+@import "bootstrap-slider/src/less/variables.less";
+
+/* -=-=-=-=[ stretto-specific stuff ]=-=-=-=-*/
+body {
   padding-top: 32px;
 }
 #wrapper{
@@ -233,7 +251,7 @@ tr:hover .options{
   max-width: 200px;
   max-height: 200px;
 }
-/* override popove max width */
+/* override popover max width */
 .popover{
   max-width: 1000px;
 }
@@ -308,4 +326,55 @@ tr:hover .options{
 /*** custom generic classes ***/
 .pointer{
   cursor: pointer;
+}
+
+/* -=-=-=-=[ theme-specific stretto-specific stuff ]=-=-=-=-*/
+#repeat_badge {
+  background-color: @brand-primary;
+}
+
+tr:hover, .controls .fa:hover, .selected {
+  background-color: rgba(0,0,0,0.4);
+}
+
+.blue {
+  color: @brand-primary;
+}
+
+/*.light-blue {
+  background-color: @brand-primary;
+}
+.light-blue:hover {
+  background-color: @brand-primary;
+}*/
+/*
+.selected {
+  background-color: @gray-lighter;
+  color: @brand-primary;
+}*/
+/*
+.selected:hover {
+  background-color: @gray;
+  color: @brand-primary;
+}*/
+
+
+/*** slider changes ***/
+.slider.slider-horizontal:hover .slider-track{
+  background: @gray-light;
+}
+.slider.slider-horizontal .slider-track{
+  height: 5px;
+  background: @gray-lighter;
+  transition: background 1s;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.slider-selection{
+  background: @brand-primary;
+}
+.slider.slider-horizontal .slider-handle{
+  opacity: 1;
+  margin-top: 5px;
+  background: @brand-primary;
 }
