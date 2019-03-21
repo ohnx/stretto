@@ -591,6 +591,8 @@ function getReceiverList(req) {
   var receiversRoom = 'receivers';
   var users = [];
 
+  if (!(app.io.of(namespace).adapter.rooms.hasOwnProperty(receiversRoom))) return [];
+
   for (var id in app.io.of(namespace).adapter.rooms[receiversRoom].sockets) {
     users.push(app.io.of(namespace).adapter.nsp.connected[id]);
   }
