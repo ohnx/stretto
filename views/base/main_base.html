@@ -9,11 +9,10 @@
   <script type="text/javascript" src="static/lib/head.min.js"></script>
 
   <script type="text/javascript">
+  /* global head */
   head.load(
-    "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.0/css/bootstrap-slider.min.css",
     "static/lib/font-awesome-bower/css/font-awesome.css",
-    "static/lib/libs.min.css",
-    "static/css/common.css"
+    "static/lib/libs.min.css"
     );
   var music_dir = "{{music_dir|addslashes}}";
   var music_dir_set = "{{music_dir_set}}" === "true";
@@ -60,9 +59,6 @@
   <script type="text/javascript">
     head.js(
       "static/lib/libs.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.0/js/bootstrap.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.0/bootstrap-slider.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.min.js",
       "socket.io/socket.io.js",
       "static/js/player/utils.js",
       "static/js/player/models.js",
@@ -71,7 +67,6 @@
       "static/js/player/socket.js",
       "static/js/player/backbone_setup.js",
       "static/js/player/settingsview.js",
-      "static/js/player/onload.js",
       "static/js/player/songview.js",
       "static/js/player/selection_options.js",
       "static/js/player/detailview.js",
@@ -80,6 +75,7 @@
       "static/js/player/syncview.js",
       "static/js/player/footer.js",
       "static/js/player/coverbox.js",
+      "static/js/player/onload.js",
   {% block scripts %}
   {% endblock %}
       "https://www.youtube.com/iframe_api"

@@ -449,8 +449,9 @@ function PlayState() {
   this.nextTrack = function() {
     // repeat the current song if the repeat state is on one
     if (this.repeat_state == this.repeat_states.one) {
-      this.PlayMethodAbstracter.setCurrentTime(0);
-      this.PlayMethodAbstracter.play();
+      /*this.PlayMethodAbstracter.setCurrentTime(0);
+      this.PlayMethodAbstracter.play();*/
+      this.PlayMethodAbstracter.playTrack(this.current_song);
       return;
     }
 
@@ -706,6 +707,7 @@ function PlayState() {
         } else {
           // load in the new audio track
           this.audio_elem.pause();
+          this.setCurrentTime(0);
           this.srcElem.attr('src', this.fullurl('songs/' + songInfo.attributes._id + '.mid'));
           this.audio_elem.load();
           this.audio_elem.play();
