@@ -4,3 +4,4 @@ static/lib/*
 static/css/themes/*
 dbs/*
 config.js
+electronres/tmp/*

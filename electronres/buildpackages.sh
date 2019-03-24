@@ -1,7 +1,8 @@
 #!/bin/bash -e
 # first run electron-packager and put the output in tmp
 echo 'Building Stretto for all platforms'
-electron-packager ./ "Stretto" --platform=win32,linux,darwin --arch=all --electron-version=3.1.3 --app-version=0.37.6 --out=/electronres/tmp --overwrite --ignore="dbs|bower_components|electronres" --icon electronres/icon --prune
+# needs to be run on a system with 32-bit WINE installed
+electron-packager ./ "Stretto" --platform=win32,linux,darwin --arch=all --electron-version=4.1.1 --app-version=0.40.2 --out=electronres/tmp --overwrite --ignore="dbs|bower_components|electronres" --icon electronres/icon --prune
 
 # then copy the ffmpeg binaries into them
 echo 'Copying ffmpeg binaries to windows builds'
