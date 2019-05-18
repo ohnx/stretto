@@ -95,7 +95,7 @@ MusicApp.addInitializer(function(options) {
     return element.split(/&|,/);
   });
   swig.setFilter('hasfeat', function(element) {
-    return element.includes("feat\. ");
+    return element.includes("(feat\. ") || element.includes("[feat\. ");
   });
   swig.setFilter('featst', function(element) {
     return element.match(/(.*) [(\[]feat\. (.*)[\])]/)[1].trim();
