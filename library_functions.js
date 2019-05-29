@@ -7,7 +7,7 @@ var mkdirp = require('mkdirp');
 var async = require('async');
 var SoundcloudResolver = require('soundcloud-resolver');
 var ytdl = require('ytdl-core');
-var youtubePlaylistInfo = require('youtube-playlist-info').playlistInfo;
+var youtubePlaylistInfo = require('youtube-playlist-info');
 var os = require('os');
 
 // if the platform is windows, set these
@@ -538,7 +538,8 @@ exports.scDownload = function(url) {
 // download an entire youtube playlist, makes use of ytDownload below
 function ytPlaylistDownload(playlistId, callback) {
   // fetch the playlist information
-  youtubePlaylistInfo(app.get('config').youtube.api, playlistId, function(results) {
+  youtubePlaylistInfo(app.get('config').youtube.api, playlistId).then(function(results) {
+    console.log(`${results.length} items queued from playlist download!`);
     // setup a queue, to run this function in parallel, the concurrency
     // of this is definied as youtube.parallel_download in config.js
     var queue = async.queue(function(result, next) {
