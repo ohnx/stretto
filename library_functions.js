@@ -612,14 +612,14 @@ exports.ytDownload = function(data, finalCallback) {
                 console.log('Started converting Youtube movie to mp3');
               })
               .on('end', function() {
-                console.log('finished!');
-                callback(false);
+                console.log('finished ffmpeg!');
+                callback();
               })
               .on('error', function(err) {
                 callback(err, {message: err});
               })
               .save(location);
-          },
+          }
         ], function(error, errorMessage) {
           if (!error) {
             var now = Date.now();

@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "archiver": "^1.0.0",
-    "async": "^3.0.1",
+    "async": "^3.1.0",
     "backbone": "^1.4.0",
     "backbone.babysitter": "^0.1.12",
     "backbone.marionette": "git+https://github.com/marionettejs/backbone.marionette.git#v2.4.5",
