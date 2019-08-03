@@ -582,7 +582,7 @@ exports.ytDownload = function(data, finalCallback) {
           function(callback) {
             ytdl.getInfo(data.url, function(err, info) {
               if (!err) {
-                trackInfo = info;
+                trackInfo = info.player_response.videoDetails;
                 location = path.join(out_dir, trackInfo.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.mp3');
                 fs.exists(location, function(exists) {
                   if (!exists) {
@@ -666,7 +666,7 @@ exports.ytDownload = function(data, finalCallback) {
                 year: new Date().getFullYear(),
                 disc: 0,
                 track: 0,
-                duration: trackInfo.length_seconds,
+                duration: trackInfo.lengthSeconds,
                 play_count: 0,
                 location: location.replace(app.get('config').music_dir, ''),
                 date_added: now,
@@ -685,7 +685,7 @@ exports.ytDownload = function(data, finalCallback) {
                 year: new Date().getFullYear(),
                 disc: data.disc,
                 track: data.track,
-                duration: trackInfo.length_seconds,
+                duration: trackInfo.lengthSeconds,
                 play_count: 0,
                 location: location.replace(app.get('config').music_dir, ''),
                 date_added: now,
