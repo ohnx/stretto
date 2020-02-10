@@ -428,7 +428,7 @@ exports.scDownload = function(url) {
 
       // make sure the dl dir is existent
       var out_dir = path.join(app.get('config').music_dir, app.get('config').soundcloud.dl_dir);
-      mkdirp(out_dir, function() {
+      mkdirp(out_dir).then(function() {
         // start an async loop to download the songs
         async.until(function() { return tracks.length === 0; }, function(callback) {
           // get the current item and remove it from the stack
@@ -570,7 +570,7 @@ exports.ytDownload = function(data, finalCallback) {
       var trackInfo = null;
       var out_dir = path.join(app.get('config').music_dir, app.get('config').youtube.dl_dir);
       var location = null;
-      mkdirp(out_dir, function() {
+      mkdirp(out_dir).then(function() {
         async.waterfall([
           function(callback) {
             broadcast('yt_update', {
@@ -603,8 +603,7 @@ exports.ytDownload = function(data, finalCallback) {
 
           function(callback) {
             ffmpeg(ytdl(data.url, {
-                quality: 'highest',
-                filter: function(format) { return format.resolution === null; },
+                quality: 'highestaudio',
               }))
               .noVideo()
               .audioCodec('libmp3lame')
@@ -739,7 +738,7 @@ exports.sync_import = function(songs, url) {
     var folder_of_file = file_url.substring(0, file_url.lastIndexOf(path.sep));
 
     // create the folder
-    mkdirp(folder_of_file, function() {
+    mkdirp(folder_of_file).then(function() {
         var song_file_url = app.get('config').music_dir + songs[cnt].location;
 
         // download the file

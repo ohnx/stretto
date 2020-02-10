@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "archiver": "^1.0.0",
-    "async": "^3.1.0",
+    "async": "^3.1.1",
     "backbone": "^1.4.0",
     "backbone.babysitter": "^0.1.12",
     "backbone.marionette": "git+https://github.com/marionettejs/backbone.marionette.git#v2.4.5",
@@ -25,7 +25,7 @@
     "body-parser": "^1.19.0",
     "bootbox": "^4.4.0",
     "bootstrap": "^3.4.1",
-    "bootstrap-slider": "^10.6.1",
+    "bootstrap-slider": "^10.6.2",
     "bootswatch": "^3.4.1",
     "connect-busboy": "*",
     "cookie-parser": "^1.4.0",
@@ -39,10 +39,10 @@
     "lastfm-api": "git+https://github.com/molefrog/lastfm-api.git",
     "md5": "*",
     "messenger": "git+https://github.com/HubSpot/messenger.git",
-    "mkdirp": "*",
+    "mkdirp": "^1.0.3",
     "mobile-detect": "^0.4.3",
     "musicmetadata": "*",
-    "mustache": "^3.0.1",
+    "mustache": "^3.2.1",
     "nedb": "*",
     "opener": "*",
     "request": "*",
@@ -51,10 +51,10 @@
     "song-search": "^0.1.0",
     "soundcloud-resolver": "*",
     "swig": "^1.4.2",
-    "tablesort": "^5.1.0",
-    "underscore": "^1.9.1",
-    "youtube-playlist-info": "^1.1.2",
-    "ytdl-core": "^0.29.2"
+    "tablesort": "^5.2.0",
+    "underscore": "^1.9.2",
+    "youtube-playlist-info": "git+https://git@github.com/ohnx/youtube-playlist-info.git",
+    "ytdl-core": "^1.0.7"
   },
   "optionalDependencies": {
     "ffmetadata-ohnx-fork": "*",
@@ -69,7 +69,7 @@
     "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-less": "^2.0.0",
     "grunt-contrib-uglify": "^4.0.1",
-    "grunt-http": "^2.3.2",
+    "grunt-http": "^2.3.3",
     "napa": "^3.0.0"
   }
 }

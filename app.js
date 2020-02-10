@@ -44,7 +44,7 @@ app.engine('html', require('swig').renderFile);
 
 async.series([function createDatabaseDirectory(next) {
   // make sure the dbs directory is present
-  mkdirp(app.get('configDir') + '/dbs/covers', next);
+  mkdirp(app.get('configDir') + '/dbs/covers').then(() => next());
 }, function databaseDirectoryCreated(next) {
   // attach the db to the app
   require(__dirname + '/db.js')(app);
