@@ -198,7 +198,7 @@ function uploadSong(req, res) {
     if (!lib_func.isValidSong(filename)) { console.log('invalid file ' + filename); return;}
     console.log("Uploading: " + filename);
     var odir = path.join(app.get('config').music_dir, 'upload');
-    mkdirp(odir, function (err) {
+    mkdirp(odir).then(function (err) {
       if (err) {
         console.error(err);
         return;
@@ -208,7 +208,7 @@ function uploadSong(req, res) {
       fstream = fs.createWriteStream(path.join(odir, filename));
       file.pipe(fstream);
       fstream.on('close', function () {
-        
+        // done!
       });
     });
   });
