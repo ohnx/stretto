@@ -335,6 +335,9 @@ function addToPlaylist(req) {
     if (err) {
       console.error(err);
       return;
+    } else if (!doc) {
+      console.error('doc was null', doc);
+      return;
     }
 
     // used as a counter to count how many still need to be added

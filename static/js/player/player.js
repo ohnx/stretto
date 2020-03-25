@@ -47,6 +47,7 @@ function PlayState() {
   this.shuffle_state = false;
   this.repeat_state = 0;
   this.scrub = null;
+  this.playerUpdateInterval = null;
 
   // keep track of play next and history
   this.play_history = [];
@@ -55,7 +56,7 @@ function PlayState() {
   // remote control data
   this.comp_name = null;
   this.init = function() {
-    setInterval(function() { player.update(); }, 50);
+    this.playerUpdateInterval = setInterval(function() { player.update(); }, 50);
 
     $(this.names.playpause).click(function() { player.togglePlayState(); });
 
@@ -363,8 +364,11 @@ function PlayState() {
     $(this.names.playpause).removeClass('fa-play fa-pause');
     if (this.is_playing) {
       $(this.names.playpause).addClass('fa-pause');
+      this.playerUpdateInterval = setInterval(function() { player.update(); }, 50);
     } else {
       $(this.names.playpause).addClass('fa-play');
+      clearInterval(this.playerUpdateInterval);
+      this.playerUpdateInterval = null;
     }
   };
 
@@ -644,6 +648,7 @@ function PlayState() {
     this.isCasting = false;
     this.castIgnoreStatus = true;
     this.currSongInfo = null;
+    this.ignorePPStateChange = false;
 
     // html5 audio element
     this.audio_elem = document.getElementById('current_track');
@@ -664,6 +669,20 @@ function PlayState() {
       // fire the handler
       if (this.durationChangeHandler)
         this.durationChangeHandler();
+    }.bind(this));
+
+    this.audio_elem.addEventListener('play', function () {
+      // fire the handler
+      if (this.playPauseHandler && !this.ignorePPStateChange)
+        this.playPauseHandler(true);
+      this.ignorePPStateChange = false;
+    }.bind(this));
+
+    this.audio_elem.addEventListener('pause', function () {
+      // fire the handler
+      if (this.playPauseHandler && !this.ignorePPStateChange)
+        this.playPauseHandler(false);
+      this.ignorePPStateChange = false;
     }.bind(this));
 
     this.fullurl = function(fragment) {
@@ -710,6 +729,7 @@ function PlayState() {
           this.setCurrentTime(0);
           this.srcElem.attr('src', this.fullurl('songs/' + songInfo.attributes._id + '.mid'));
           this.audio_elem.load();
+          this.ignorePPStateChange = true;
           this.audio_elem.play();
         }
 
@@ -720,6 +740,7 @@ function PlayState() {
         this.isYT = true;
 
         // pause the audio element
+        this.ignorePPStateChange = true;
         this.audio_elem.pause();
 
         // load in the youtube video
@@ -783,6 +804,7 @@ function PlayState() {
       } else if (this.isCasting) {
         CHROMECAST_SENDER.pause();
       } else {
+        this.ignorePPStateChange = true;
         this.audio_elem.pause();
       }
     };
@@ -793,6 +815,7 @@ function PlayState() {
       } else if (this.isCasting) {
         CHROMECAST_SENDER.play();
       } else {
+        this.ignorePPStateChange = true;
         this.audio_elem.play();
       }
     };
@@ -881,6 +904,7 @@ function PlayState() {
   // attach to the PlayMethodAbstracter events
   this.PlayMethodAbstracter.endHandler = this.trackEnded.bind(this);
   this.PlayMethodAbstracter.durationChangeHandler = this.durationChanged.bind(this);
+  this.PlayMethodAbstracter.playPauseHandler = this.togglePlayState.bind(this);
 }
 
 var player = new PlayState();
