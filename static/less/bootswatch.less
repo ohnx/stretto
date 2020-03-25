@@ -17,3 +17,11 @@ this is a terrible hack.
 
 /* -=-=-=-=[ stretto-specific stuff ]=-=-=-=-*/
 @import "theme_base.less";
+
+.blue when (@changeblue = true) {
+  color: @brand-success;
+}
+
+#repeat_badge when (@changeblue = true) {
+  background-color: @brand-primary;
+}

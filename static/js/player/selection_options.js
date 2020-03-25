@@ -49,28 +49,22 @@ function createOptions(x, y) {
   });
 
   $('.add_to_playlist').click(function(ev) {
-    let id = $(ev.target).closest('li').attr('id');
-    socket.emit('add_to_playlist', {add: selectedItems, playlist: id});
-    hideOptions();
+    addToPlaylist($(ev.target).closest('li').attr('id'));
+  });
 
-    // add to recents
-    var this_playlist = player.playlist_collection.getBy_Id(id);
-
-    // take it out if it's in the recents
-    for (var x = 0; x < recentPlaylists.length; x++) {
-      if (recentPlaylists[x].attributes._id == this_playlist.attributes._id) {
-        // remove it from recents
-        recentPlaylists.splice(x, 1);
+  $('.add_to_new_playlist').click(function(ev) {
+    bootbox.prompt('Playlist title?', function(result) {
+      if (result !== null && result !== '') {
+        socket.emit('create_playlist', {title: result, songs: []});
+        setTimeout(function() {
+          let id = player.playlist_collection.getByTitle(result);
+          if (id && ('attributes' in id) && ('_id' in id.attributes))
+            addToPlaylist(id.attributes._id);
+          else
+            Messenger().post('Failed to create new playlist');
+        }, 1000);
       }
-    }
-
-    // add to the start of recents
-    recentPlaylists.unshift(this_playlist);
-
-    // remove if too many
-    if (recentPlaylists.length > 3) {
-      recentPlaylists.pop();
-    }
+    });
   });
 
   $('.remove_from_playlist').click(function(ev) {
@@ -224,4 +218,29 @@ function indexInSongView(id) {
 function clearSelection() {
   selectedItems = [];
   $('tr').removeClass('selected');
+}
+
+function addToPlaylist(id) {
+  console.log(id, selectedItems);
+  socket.emit('add_to_playlist', {add: selectedItems, playlist: id});
+  hideOptions();
+
+  // add to recents
+  var this_playlist = player.playlist_collection.getBy_Id(id);
+
+  // take it out if it's in the recents
+  for (var x = 0; x < recentPlaylists.length; x++) {
+    if (recentPlaylists[x].attributes._id == this_playlist.attributes._id) {
+      // remove it from recents
+      recentPlaylists.splice(x, 1);
+    }
+  }
+
+  // add to the start of recents
+  recentPlaylists.unshift(this_playlist);
+
+  // remove if too many
+  if (recentPlaylists.length > 3) {
+    recentPlaylists.pop();
+  }
 }

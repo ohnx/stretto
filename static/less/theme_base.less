@@ -141,6 +141,13 @@ tr:hover .options{
 }
 .colsearch:hover{
   text-decoration: underline;
+  cursor: pointer;
+}
+.colsearch:after {
+    content: ', ';
+}
+.colsearch:last-child:after {
+    content: '';
 }
 .unknown_cover {
   width: 40px;
@@ -212,6 +219,8 @@ tr:hover .options{
 }
 #vol_bar_slider{
   margin-right: 20px;
+  margin-top: 4px;
+  vertical-align: top;
 }
 .volume_icon{
   vertical-align: middle;
@@ -341,6 +350,10 @@ tr:hover, .controls .fa:hover, .selected {
   color: @brand-primary;
 }*/
 
+/*** scrollbar changes ***/
+.custom_scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: @brand-primary;
+}
 
 /*** slider changes ***/
 .slider.slider-horizontal:hover .slider-track{

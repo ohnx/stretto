@@ -8,7 +8,8 @@ module.exports = function(grunt) {
     lessTasks[bootswatchThemes[i]] = {
       options: {
         modifyVars: {
-          theme_using: bootswatchThemes[i]
+          theme_using: bootswatchThemes[i],
+          changeblue: bootswatchThemes[i] == "flatly"
         }
       },
       files: {}

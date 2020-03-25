@@ -1,5 +1,5 @@
 // setup the backbone app and router
-/* global Backbone, player, SongView, $, SidebarView, SettingsBarView, _, on_mobile */
+/* global Backbone, player, SongView, $, SidebarView, SettingsBarView, _, on_mobile, swig */
 let MusicApp = new Backbone.Marionette.Application();
 
 MusicApp.addRegions({
@@ -89,6 +89,20 @@ MusicApp.addInitializer(function(options) {
   if (!on_mobile) {
     MusicApp.router.settingsbar();
   }
+
+  // setup swig filters
+  swig.setFilter('splitup', function(element) {
+    return element.split(/&|,/);
+  });
+  swig.setFilter('hasfeat', function(element) {
+    return element.includes("(feat\. ") || element.includes("[feat\. ");
+  });
+  swig.setFilter('featst', function(element) {
+    return element.match(/(.*) [(\[]feat\. (.*)[\])]/)[1].trim();
+  });
+  swig.setFilter('featart', function(element) {
+      return element.match(/(.*) [(\[]feat\. (.*)[\])]/)[2];
+  });
 
   // load the history api
   Backbone.history.start({pushState: false});

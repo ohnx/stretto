@@ -7,7 +7,7 @@ var mkdirp = require('mkdirp');
 var async = require('async');
 var SoundcloudResolver = require('soundcloud-resolver');
 var ytdl = require('ytdl-core');
-var youtubePlaylistInfo = require('youtube-playlist-info').playlistInfo;
+var youtubePlaylistInfo = require('youtube-playlist-info');
 var os = require('os');
 
 // if the platform is windows, set these
@@ -428,7 +428,7 @@ exports.scDownload = function(url) {
 
       // make sure the dl dir is existent
       var out_dir = path.join(app.get('config').music_dir, app.get('config').soundcloud.dl_dir);
-      mkdirp(out_dir, function() {
+      mkdirp(out_dir).then(function() {
         // start an async loop to download the songs
         async.until(function() { return tracks.length === 0; }, function(callback) {
           // get the current item and remove it from the stack
@@ -538,7 +538,8 @@ exports.scDownload = function(url) {
 // download an entire youtube playlist, makes use of ytDownload below
 function ytPlaylistDownload(playlistId, callback) {
   // fetch the playlist information
-  youtubePlaylistInfo(app.get('config').youtube.api, playlistId, function(results) {
+  youtubePlaylistInfo(app.get('config').youtube.api, playlistId).then(function(results) {
+    console.log(`${results.length} items queued from playlist download!`);
     // setup a queue, to run this function in parallel, the concurrency
     // of this is definied as youtube.parallel_download in config.js
     var queue = async.queue(function(result, next) {
@@ -569,7 +570,7 @@ exports.ytDownload = function(data, finalCallback) {
       var trackInfo = null;
       var out_dir = path.join(app.get('config').music_dir, app.get('config').youtube.dl_dir);
       var location = null;
-      mkdirp(out_dir, function() {
+      mkdirp(out_dir).then(function() {
         async.waterfall([
           function(callback) {
             broadcast('yt_update', {
@@ -581,7 +582,7 @@ exports.ytDownload = function(data, finalCallback) {
           function(callback) {
             ytdl.getInfo(data.url, function(err, info) {
               if (!err) {
-                trackInfo = info;
+                trackInfo = info.player_response.videoDetails;
                 location = path.join(out_dir, trackInfo.title.replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.mp3');
                 fs.exists(location, function(exists) {
                   if (!exists) {
@@ -602,8 +603,7 @@ exports.ytDownload = function(data, finalCallback) {
 
           function(callback) {
             ffmpeg(ytdl(data.url, {
-                quality: 'highest',
-                filter: function(format) { return format.resolution === null; },
+                quality: 'highestaudio',
               }))
               .noVideo()
               .audioCodec('libmp3lame')
@@ -611,14 +611,14 @@ exports.ytDownload = function(data, finalCallback) {
                 console.log('Started converting Youtube movie to mp3');
               })
               .on('end', function() {
-                console.log('finished!');
-                callback(false);
+                console.log('finished ffmpeg!');
+                callback();
               })
               .on('error', function(err) {
                 callback(err, {message: err});
               })
               .save(location);
-          },
+          }
         ], function(error, errorMessage) {
           if (!error) {
             var now = Date.now();
@@ -665,7 +665,7 @@ exports.ytDownload = function(data, finalCallback) {
                 year: new Date().getFullYear(),
                 disc: 0,
                 track: 0,
-                duration: trackInfo.length_seconds,
+                duration: trackInfo.lengthSeconds,
                 play_count: 0,
                 location: location.replace(app.get('config').music_dir, ''),
                 date_added: now,
@@ -684,7 +684,7 @@ exports.ytDownload = function(data, finalCallback) {
                 year: new Date().getFullYear(),
                 disc: data.disc,
                 track: data.track,
-                duration: trackInfo.length_seconds,
+                duration: trackInfo.lengthSeconds,
                 play_count: 0,
                 location: location.replace(app.get('config').music_dir, ''),
                 date_added: now,
@@ -738,7 +738,7 @@ exports.sync_import = function(songs, url) {
     var folder_of_file = file_url.substring(0, file_url.lastIndexOf(path.sep));
 
     // create the folder
-    mkdirp(folder_of_file, function() {
+    mkdirp(folder_of_file).then(function() {
         var song_file_url = app.get('config').music_dir + songs[cnt].location;
 
         // download the file

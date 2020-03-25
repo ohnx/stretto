@@ -130,9 +130,23 @@
     <i class='fa fa-plus-square-o options'></i>
   </div>
   <img class='cover' src='{{song.getCover()}}'/>
-  <span class='song_text'>{{song.attributes.title}}</span>
+  <span class='song_text'>
+  {% if song.attributes.title|hasfeat %}
+  {% set tartists = song.attributes.title|featart %}
+  {% set tartists_array = tartists|splitup %}
+  {{song.attributes.title|featst}}
+  (feat. {% for artist in tartists_array %}<span class='colsearch'>{{artist.trim()}}</span>{% endfor %})
+  {% else %}
+  {{song.attributes.title}}
+  {% endif %}
+  </span>
 </td>
-<td><span class='colsearch'>{{song.attributes.display_artist}}</span></td>
+<td>
+{% set artists_array = song.attributes.display_artist|splitup %}
+{% for artist in artists_array %}
+<span class='colsearch'>{{artist.trim()}}</span>
+{% endfor %}
+</td>
 <td><span class='colsearch'>{{song.attributes.album}}</span></td>
 {% if song.attributes.is_youtube %}
   <td>(not in library)</td>
@@ -148,8 +162,22 @@
 <script type="text/swig" id="current_info_template">
   <img class='info_cover' src='{{song.getCover()}}'/>
   <div class='info_wrapper'>
-    <p class="info_title">{{song.attributes.title}}</p>
-    <p class="info_detail"><span class='colsearch'>{{song.attributes.display_artist}}</span> - <span class='colsearch'>{{song.attributes.album}}</span> <i class='fa fa-plus-square-o info_options'></i></p>
+    <p class="info_title">
+      {% if song.attributes.title|hasfeat %}
+        {% set tartists = song.attributes.title|featart %}
+        {% set tartists_array = tartists|splitup %}
+        {{song.attributes.title|featst}}
+        (feat. {% for artist in tartists_array %}<span class='colsearch'>{{artist.trim()}}</span>{% endfor %})
+    {% else %}
+      {{song.attributes.title}}
+    {% endif %}
+    </p>
+    <p class="info_detail">
+      <span>{% set artists_array = song.attributes.display_artist|splitup %}{% for artist in artists_array %}<span class='colsearch'>{{artist.trim()}}</span>{% endfor %}</span>
+      -
+      <span><span class='colsearch'>{{song.attributes.album}}</span></span>
+      <i class='fa fa-plus-square-o info_options'></i>
+    </p>
   </div>
 </script>
 <script type="text/swig" id="info_template">
@@ -223,6 +251,7 @@
           {% endif %}
         {% endfor %}
       {% endif %}
+      <li class="add_to_new_playlist"><a>(new playlist)</a></li>
       <li role="presentation" class="dropdown-header">Add to Playlist</li>
       {% for playlist in playlists %}
         {% if playlist.attributes.editable %}
