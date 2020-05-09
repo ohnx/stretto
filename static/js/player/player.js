@@ -351,7 +351,7 @@ function PlayState() {
 
       if (cover_is_visible && cover_is_current && this.current_song.attributes.cover_location) {
         // update the cover photo if it's showing fullscreen and the new song has cover art
-        showCover('cover/' + this.current_song.attributes.cover_location + '.jpg');
+        showCover('cover/' + this.current_song.attributes.cover_location);
       }
 
       this.displayNotification();
@@ -612,7 +612,7 @@ function PlayState() {
         var notifOptions = {
           dir: 'auto',
           body: 'Album: ' + this.current_song.attributes.album + '\nArtist: ' + this.current_song.attributes.display_artist,
-          icon: 'cover/' + this.current_song.attributes.cover_location + '.jpg',
+          icon: 'cover/' + this.current_song.attributes.cover_location,
         };
         if (this.lastNotificationTimeout) {
           clearTimeout(this.lastNotificationTimeout);
@@ -703,7 +703,7 @@ function PlayState() {
           mediaMeta.albumArtist = songInfo.attributes.albumArtist;
           mediaMeta.albumName = songInfo.attributes.album;
           mediaMeta.artist = songInfo.attributes.display_artist;
-          mediaMeta.images = [new chrome.cast.Image(this.fullurl('cover/' + songInfo.attributes.cover_location + '.jpg'))];
+          mediaMeta.images = [new chrome.cast.Image(this.fullurl('cover/' + songInfo.attributes.cover_location))];
           mediaMeta.releaseYear = songInfo.attributes.year;
           mediaMeta.songName = mediaMeta.title = songInfo.attributes.title;
 

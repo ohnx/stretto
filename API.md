@@ -53,7 +53,7 @@ Path for all of the song files themselves. Fill `<song_id>` with the correspondi
 
 ## Album art
 
-### `/cover/<cover_location>.jpg`
+### `/cover/<cover_location>`
 
 Fetches the corresponding cover. Fill `<cover_location>` with the corresponding
 `cover_location` that is desired to be fetched.

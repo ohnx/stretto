@@ -30,7 +30,7 @@ exports.createRoutes = function(app_ref) {
   app.get('/songs/:id.mid', sendSong);
   app.get('/songs', function(req, res){get_songs(function(songs){res.json(songs);res.end();});});
   app.get('/playlists', function(req, res){app.db.playlists.find({}).sort({title:1}).exec(function(err,docs){if(err){res.json([]);}else{res.json(docs);}res.end();})});
-  app.get('/cover/:id.jpg', sendCover);
+  app.get('/cover/:id', sendCover);
   app.get('/downloadplaylist/:id', downloadPlaylist);
   app.post('/upload', uploadSong);
 
