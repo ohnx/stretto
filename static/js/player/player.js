@@ -364,7 +364,8 @@ function PlayState() {
     $(this.names.playpause).removeClass('fa-play fa-pause');
     if (this.is_playing) {
       $(this.names.playpause).addClass('fa-pause');
-      this.playerUpdateInterval = setInterval(function() { player.update(); }, 50);
+      if (!this.playerUpdateInterval)
+        this.playerUpdateInterval = setInterval(function() { player.update(); }, 50);
     } else {
       $(this.names.playpause).addClass('fa-play');
       clearInterval(this.playerUpdateInterval);
