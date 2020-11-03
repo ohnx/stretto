@@ -649,7 +649,6 @@ function PlayState() {
     this.isCasting = false;
     this.castIgnoreStatus = true;
     this.currSongInfo = null;
-    this.ignorePPStateChange = false;
 
     // html5 audio element
     this.audio_elem = document.getElementById('current_track');
@@ -670,20 +669,6 @@ function PlayState() {
       // fire the handler
       if (this.durationChangeHandler)
         this.durationChangeHandler();
-    }.bind(this));
-
-    this.audio_elem.addEventListener('play', function () {
-      // fire the handler
-      if (this.playPauseHandler && !this.ignorePPStateChange)
-        this.playPauseHandler(true);
-      this.ignorePPStateChange = false;
-    }.bind(this));
-
-    this.audio_elem.addEventListener('pause', function () {
-      // fire the handler
-      if (this.playPauseHandler && !this.ignorePPStateChange)
-        this.playPauseHandler(false);
-      this.ignorePPStateChange = false;
     }.bind(this));
 
     this.fullurl = function(fragment) {
@@ -730,7 +715,6 @@ function PlayState() {
           this.setCurrentTime(0);
           this.srcElem.attr('src', this.fullurl('songs/' + songInfo.attributes._id + '.mid'));
           this.audio_elem.load();
-          this.ignorePPStateChange = true;
           this.audio_elem.play();
         }
 
@@ -741,7 +725,6 @@ function PlayState() {
         this.isYT = true;
 
         // pause the audio element
-        this.ignorePPStateChange = true;
         this.audio_elem.pause();
 
         // load in the youtube video
@@ -805,7 +788,6 @@ function PlayState() {
       } else if (this.isCasting) {
         CHROMECAST_SENDER.pause();
       } else {
-        this.ignorePPStateChange = true;
         this.audio_elem.pause();
       }
     };
@@ -816,7 +798,6 @@ function PlayState() {
       } else if (this.isCasting) {
         CHROMECAST_SENDER.play();
       } else {
-        this.ignorePPStateChange = true;
         this.audio_elem.play();
       }
     };
