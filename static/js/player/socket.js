@@ -264,6 +264,15 @@ socket.on('command', function(data) {
       player.vol.slider('setValue', newVol);
       player.setVolume(newVol);
       break;
+    case 'shuffle':
+      player.toggleShuffle();
+      break;
+    case 'repeat':
+      player.toggleRepeat();
+      break;
+    case 'sleeptimer':
+      player.toggleSleepTimer();
+      break;
     default:
       break;
   }

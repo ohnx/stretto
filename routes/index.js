@@ -572,7 +572,7 @@ function remoteCommandInterface(req, res) {
   res.render('remote', {
     app_name: config.app_name,
     current_remotes: validReceivers,
-    possible_commands: ['prev', 'next', 'playpause', 'volup', 'voldown', 'repeat', 'shuffle']
+    possible_commands: ['prev', 'next', 'playpause', 'volup', 'voldown', 'repeat', 'shuffle', 'sleeptimer']
   });
 }
 

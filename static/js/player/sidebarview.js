@@ -51,7 +51,7 @@ SettingsBarView = Backbone.View.extend({
   },
   openOptions: function() {
     bootbox.dialog({
-      message: render('#control_template', { comp_name: player.comp_name, host: window.location.host }),
+      message: render('#control_template', { comp_name: player.comp_name, host: window.location.host, default_sleep: player.sleep_timeout_min }),
       title: 'Setup Remote Control',
       buttons: {
         danger: {
@@ -64,6 +64,8 @@ SettingsBarView = Backbone.View.extend({
           callback: function() {
             let comp_name = $('#comp_name_input').val();
             player.setCompName(comp_name);
+            let sleep_time = parseInt($('#sleep_timer_input').val(), 10);
+            player.setupSleepTimer(sleep_time);
           },
         },
       },

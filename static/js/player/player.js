@@ -15,6 +15,7 @@ function PlayState() {
     repeat: '#repeat',
     repeat_badge: '#repeat_badge',
     shuffle: '#shuffle',
+    sleep_timer: '#sleep_timer_enabled',
   };
   this.repeat_states = {
     all: 0,
@@ -53,10 +54,23 @@ function PlayState() {
   this.play_history = [];
   this.play_history_idx = 0;
 
+  // keep track of recent interactions
+  this.had_recent_interaction = false;
+  this.sleep_timeout_min = -1;
+  this.sleepTimerInterval = null;
+
   // remote control data
   this.comp_name = null;
   this.init = function() {
     this.playerUpdateInterval = setInterval(function() { player.update(); }, 50);
+    // recent interactions
+    document.body.addEventListener('click', function() {
+      this.had_recent_interaction = true;
+    }.bind(this));
+    document.body.addEventListener('click', function() {
+      this.had_recent_interaction = true;
+    }.bind(this));
+    this.setupSleepTimer();
 
     $(this.names.playpause).click(function() { player.togglePlayState(); });
 
@@ -68,6 +82,8 @@ function PlayState() {
 
     $(this.names.shuffle).click(function() { player.toggleShuffle(); });
 
+    $(this.names.sleep_timer).click(function() { player.toggleSleepTimer(); });
+
     this.shuffle_state = localStorage.getItem('shuffle') == 'true' || false;
     this.redrawShuffle();
     this.repeat_state = localStorage.getItem('repeat') || this.repeat_states.all;
@@ -76,6 +92,47 @@ function PlayState() {
     this.volume = parseInt(localStorage.getItem('currentVolume'), 10) || 100;
     this.PlayMethodAbstracter.setVolume(this.volume);
     this.onMobile = on_mobile;
+  };
+
+  this.sleepTimer = function() {
+    if (player.had_recent_interaction) {
+      player.had_recent_interaction = false;
+    } else {
+      // no recent interaction in a while, so pause
+      player.PlayMethodAbstracter.pause();
+      player.setIsPlaying(false);
+      // also clear the interval
+      player.toggleSleepTimer();
+    }
+  };
+
+  this.setupSleepTimer = function(timeout_amnt) {
+    if (timeout_amnt == null) {
+      timeout_amnt = localStorage.getItem('sleep_timer');
+      if (timeout_amnt == null) {
+        timeout_amnt = 15;
+      }
+    }
+    this.sleep_timeout_min = timeout_amnt;
+    if (this.sleepTimerInterval) {
+      // toggle twice, once to turn off, and once to turn back on again w/ new time
+      this.toggleSleepTimer();
+      this.toggleSleepTimer();
+    }
+    localStorage.setItem('sleep_timer', this.sleep_timeout_min);
+  };
+
+  this.toggleSleepTimer = function() {
+    if (this.sleepTimerInterval) {
+      clearInterval(this.sleepTimerInterval);
+      $(this.names.sleep_timer).addClass('hidden');
+      this.sleepTimerInterval = null;
+    } else {
+      if (this.sleep_timeout_min > 0) {
+        this.sleepTimerInterval = setInterval(this.sleepTimer, this.sleep_timeout_min * 60000);
+        $(this.names.sleep_timer).removeClass('hidden');
+      }
+    }
   };
 
   this.setupCollections = function() {

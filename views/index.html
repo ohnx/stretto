@@ -3,6 +3,7 @@
 {% block title %}Music{% endblock %}
 
 {% block extra_nav %}
+<li><a class='pointer hidden' id='sleep_timer_enabled'><i class="fa fa-clock-o" aria-hidden="true"></i></a></li>
 <li class='dropdown'>
   <a class='pointer dropdown-toggle' data-toggle='dropdown'>Get More Music <span class="caret"></span></a>
   <ul class='dropdown-menu' role='menu'>
@@ -274,6 +275,12 @@
       <label for="comp_name_input" class='col-sm-3'>Remote name</label>
       <div class='col-sm-9'>
         <input class="form-control" id="comp_name_input" type="text" value="{{comp_name}}" placeholder="Living Room Computer" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sleep_timer_input" class='col-sm-3'>Default sleep timer amount (in minutes)<br />Set to 0 to disable</label>
+      <div class='col-sm-9'>
+        <input class="form-control" id="sleep_timer_input" type="text" value="{{default_sleep}}" placeholder="15" />
       </div>
     </div>
   </div>
