@@ -852,7 +852,7 @@ function PlayState() {
       } else if (this.isCasting) {
         return CHROMECAST_SENDER.pbdur();
       } else {
-        return this.audio_elem.duration;
+        return Math.min(this.currSongInfo.end_time, this.audio_elem.duration);
       }
     };
 
