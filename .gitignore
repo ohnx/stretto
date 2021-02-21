@@ -5,3 +5,4 @@ static/css/themes/*
 dbs/*
 config.js
 electronres/tmp/*
+*.csv
