@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ app_name }} Remote</title>
+        <style type="text/css">
+            body{margin:40px auto;max-width:650px;line-height:1.6;font-size:18px;padding:0 10px;font-family:'Georgia';}h1,h2,h3{line-height:1.2}
+            a {
+                cursor: pointer;
+                background: aliceblue;
+                padding: 0.5em;
+                display: inline-block;
+                margin: 0.1em;
+            }
+            a:hover, a:active {
+                background: teal;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>{{ app_name }} remote</h1>
+        <p>Available remotes and commands:</p>
+        <div>
+            {% for remote in current_remotes %}
+                <p>
+                    {{ remote }}
+                    {% for cmd in possible_commands %}
+                    <a onclick="javascript:sendRemoteCommand('{{remote}}', '{{cmd}}')">{{cmd}}</a>
+                    {% endfor %}
+                </p>
+            {% endfor %}
+        </div>
+        <p id="msg"></p>
+        <script>
+            /* global fetch */
+            function sendRemoteCommand(remote, cmd) {
+                document.getElementById('msg').innerHTML = '';
+                fetch(`/command/${remote}/${cmd}/`).then((response) => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Something went wrong');
+                    }
+                })
+                .then((responseText) => {
+                    document.getElementById('msg').innerHTML = responseText;
+                })
+                .catch((error) => {
+                    document.getElementById('msg').innerHTML = 'Error sending remote command';
+                    console.log(error);
+                });
+            }
+        </script>
+    </body>
+</html>

@@ -35,6 +35,7 @@ exports.createRoutes = function(app_ref) {
   app.post('/upload', uploadSong);
 
   // remote control commands
+  app.get('/command', remoteCommandInterface);
   app.get('/command/:name/:command', remoteCommand);
   app.io.route('player_page_connected', function(req) { req.socket.join('players'); });
 
@@ -554,6 +555,26 @@ function rewriteTags(req) {
 }
 
 // controller routes
+function remoteCommandInterface(req, res) {
+  var config = app.get('config');
+
+  var allReceivers = getReceiverList();
+  var validReceivers = [];
+  for (var index in allReceivers) {
+    var client = allReceivers[index];
+    if (client.name &&
+      client.name.length > 0) {
+      validReceivers.push(client.name);
+    }
+  }
+
+  // render the view
+  res.render('remote', {
+    app_name: config.app_name,
+    current_remotes: validReceivers,
+    possible_commands: ['prev', 'next', 'playpause', 'volup', 'voldown', 'repeat', 'shuffle']
+  });
+}
 
 function remoteCommand(req, res) {
   // get params
