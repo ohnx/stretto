@@ -38,10 +38,14 @@ function showInfoView(items) {
       cover: $('.lfm_cover').attr('src') || filedropdata,
       cover_is_lastfm: islastfm,
       cover_is_url: cover_is_url,
+      start_play_at: parseFloat($('#start_play_at').val()),
+      end_play_at: parseFloat($('#end_play_at').val()),
     };
     if (data.cover == track.attributes.cover_location) {
       data.cover = null;
     }
+    data.start_play_at = isNaN(data.start_play_at) ? 0 : data.start_play_at;
+    data.end_play_at = isNaN(data.end_play_at) ? 0 : data.end_play_at;
 
     // get the data to change on the server
     socket.emit('update_song_info', data);
@@ -50,6 +54,8 @@ function showInfoView(items) {
     track.attributes.title = data.title;
     track.attributes.display_artist = data.artist;
     track.attributes.album = data.album;
+    track.attributes.start_play_at = data.start_play_at;
+    track.attributes.end_play_at = data.end_play_at;
 
     // redraw the song
     MusicApp.router.songview.redrawSong(data._id);

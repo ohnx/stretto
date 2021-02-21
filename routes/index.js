@@ -469,6 +469,8 @@ function updateSongInfo(req) {
       title: req.data.title,
       display_artist: req.data.artist,
       album: req.data.album,
+      start_play_at: req.data.start_play_at,
+      end_play_at: req.data.end_play_at,
 
       // it has been modified, update it
       date_modified: Date.now(),

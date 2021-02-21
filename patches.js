@@ -102,4 +102,29 @@ module.exports = function(app) {
         console.log('Adding track and disc numbers for ' + documents.length  + ' tracks. This will re-read those tracks from the filesystem.');
       }
     });
+
+  // add the start_time and end_time numbers
+  app.db.songs.update(
+    {start_play_at: {$exists: false}},
+    {$set: {start_play_at: 0}}, {multi: true}, function(err, numReplaced) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (numReplaced > 0) {
+        console.log('start_play_at patch applied to: ' + numReplaced + ' rows');
+      }
+    }
+  });
+  app.db.songs.update(
+    {end_play_at: {$exists: false}},
+    {$set: {end_play_at: 0}}, {multi: true}, function(err, numReplaced) {
+    if (err) {
+      console.log(err);
+    } else {
+      if (numReplaced > 0) {
+        console.log('end_play_at patch applied to: ' + numReplaced + ' rows');
+      }
+    }
+  });
+
 };

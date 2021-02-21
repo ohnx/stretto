@@ -147,6 +147,10 @@ function PlayState() {
       this.scrub.slider('setValue', this.PlayMethodAbstracter.getCurrentTime() / this.PlayMethodAbstracter.getDuration() * 100.0, false);
       var seconds = prettyPrintSeconds(this.PlayMethodAbstracter.getCurrentTime());
       $('.current_time').html(seconds);
+      if (this.PlayMethodAbstracter.getCurrentTime() >= this.current_song.end_time) {
+        // we are done now
+        this.trackEnded();
+      }
     }
   };
 
@@ -769,10 +773,23 @@ function PlayState() {
         } else {
           // load in the new audio track
           this.audio_elem.pause();
-          this.setCurrentTime(0);
           this.srcElem.attr('src', this.fullurl('songs/' + songInfo.attributes._id + '.mid'));
           this.audio_elem.load();
           this.audio_elem.play();
+
+          // set the new start point
+          if (songInfo.attributes.start_play_at < songInfo.attributes.duration) {
+            if (songInfo.attributes.end_play_at > songInfo.attributes.start_play_at) {
+              songInfo.end_time = songInfo.attributes.end_play_at;
+            } else {
+              songInfo.end_time = Infinity;
+            }
+            this.setCurrentTime(songInfo.attributes.start_play_at);
+          } else {
+            // invalid bounds given, so don't bother setting
+            songInfo.end_time = Infinity;
+            this.setCurrentTime(0);
+          }
         }
 
         // only set this for tracks as youtube ones won't be avialable on refresh

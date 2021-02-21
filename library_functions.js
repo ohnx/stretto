@@ -119,6 +119,8 @@ function findSong(relative_location, callback) {
                 location: relative_location,
                 date_added: now,
                 date_modified: now,
+                start_play_at: 0,
+                end_play_at: 0
               };
 
               if (doc === null) {
@@ -175,6 +177,8 @@ function findSong(relative_location, callback) {
               location: relative_location,
               date_added: now,
               date_modified: now,
+              start_play_at: 0,
+              end_play_at: 0,
             };
 
             // write the cover photo as an md5 string
@@ -456,6 +460,8 @@ exports.scDownload = function(url) {
             location: location.replace(app.get('config').music_dir, ''),
             date_added: now,
             date_modified: now,
+            start_play_at: 0,
+            end_play_at: 0,
           };
 
           // prep function to run after we have finished grabbing all the files we can
@@ -668,6 +674,8 @@ exports.ytDownload = function(data, finalCallback) {
                 location: location.replace(app.get('config').music_dir, ''),
                 date_added: now,
                 date_modified: now,
+                start_play_at: 0,
+                end_play_at: 0,
               };
 
               saveData(song);
@@ -687,6 +695,8 @@ exports.ytDownload = function(data, finalCallback) {
                 location: location.replace(app.get('config').music_dir, ''),
                 date_added: now,
                 date_modified: now,
+                start_play_at: 0,
+                end_play_at: 0,
               };
 
               downloadCoverArt(data.cover_location, function(cover_location) {
